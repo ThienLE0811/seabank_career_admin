@@ -1,0 +1,3 @@
+[submodule "openapi"]
+	path = openapi
+	url = https://gitlab.gogroup.vn/seabank/seabank-career-website/api-swagger-design.git

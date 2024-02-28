@@ -1,0 +1,102 @@
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+.ant-pro-page-container .ant-pro-page-container-warp-page-header {
+  padding-block-end: 0;
+}
+
+.ant-pro-footer-bar {
+  height: 44px;
+}
+
+aside .my-prefix-base-menu-inline {
+  color: rgb(255 255 255 / 84%);
+}
+
+.ant-pro-table-list-toolbar-container {
+  padding: 4px 8px 8px 4px;
+}
+
+/* .ant-pro-form-login-page {
+  margin-top: 10vh;
+} */
+
+.ant-pro-form-login-page-header {
+  display: unset;
+  height: 44px;
+  line-height: 44px;
+}
+
+.ant-table-wrapper .ant-table-pagination.ant-pagination {
+  margin: 8px 0;
+}
+
+.ant-pro-form-login-page-logo>img {
+  width: 195px;
+  height: 40px;
+}
+
+.ant-pro-form-list-creator-button-bottom {
+  margin-top: 30px;
+}
+
+.editor-style {
+  padding-bottom: 20px;
+}
+
+@media screen and (max-width: 1080px) {
+  .editor-style {
+    width: 536px;
+  }
+}
+
+@media screen and (max-width: 800px) {
+  .editor-style {
+    width: 336px;
+  }
+}
+
+.ant-descriptions-item-label {
+  margin-left: 20px;
+}
+
+.header-collapsible {
+  background-color: #fcd9dd;
+  border-radius: 8px 8px 0 0 !important;
+  color: #b71c1c !important;
+  font-weight: 600;
+  font-size: 32px !important;
+}
+
+.form-submit>.ant-btn {
+  margin-left: 10px;
+}
+
+.submitFootbar {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 12px;
+  gap: 8px;
+}
+
+.banner-table .ant-table-tbody>tr>td.ant-table-cell-row-hover {
+  background: transparent !important;
+  z-index: 0 !important;
+}
+
+.banner-table .ant-table-tbody>tr>td.ant-table-cell-row-hover {
+  background: transparent !important;
+  z-index: 0 !important;
+}
+
+.banner-table .ant-table-wrapper .ant-table-cell-fix-right {
+  background: transparent !important;
+  z-index: 30 !important;
+}
+
+.banner-table .ant-dropdown-menu .ant-dropdown-menu-root .ant-dropdown-menu-vertical .ant-dropdown-menu-light {
+  z-index: 300 !important;
+}

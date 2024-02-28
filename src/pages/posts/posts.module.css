@@ -1,0 +1,6 @@
+.submitFootbar {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 12px;
+    gap: 8px;
+}

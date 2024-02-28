@@ -1,0 +1,116 @@
+[
+    {
+        "id": "1",
+        "title": "Facebook",
+        "description": "https://confluence.gogroup.vn/pages/viewpage.action?pageId=18252083",
+        "content": "123",
+        "state": "123",
+        "createdTime": "123",
+        "createdBy": "123",
+        "modifiedTime": "123",
+        "modifiedBy": "123",
+        "ordering": "123",
+        "stick": false,
+        "categories": [
+            {
+                "id": 123,
+                "name": "Tin tức"
+            },
+            {
+                "id": 1223,
+                "name": "Sự kiện"
+            }
+        ],
+        "publishUp": "123",
+        "thumbImage": "123",
+        "tags": [
+            {
+                "id": 123,
+                "name": "Tin tức"
+            },
+            {
+                "id": 1223,
+                "name": "Sự kiện"
+            }
+        ],
+        "feature": true,
+        "featureOrdering": 1,
+        "bannerImage": "123"
+    },
+    {
+        "id": "2",
+        "alias": "123",
+        "description": "123",
+        "content": "123",
+        "state": "123",
+        "createdTime": "123",
+        "createdBy": "123",
+        "modifiedTime": "123",
+        "modifiedBy": "123",
+        "ordering": "123",
+        "stick": false,
+        "categories": [
+            {
+                "id": 123,
+                "name": "Tin tức"
+            },
+            {
+                "id": 1223,
+                "name": "Sự kiện"
+            }
+        ],
+        "publishUp": "123",
+        "thumbImage": "123",
+        "tags": [
+            {
+                "id": 123,
+                "name": "Tin tức"
+            },
+            {
+                "id": 1223,
+                "name": "Sự kiện"
+            }
+        ],
+        "feature": true,
+        "featureOrdering": 1,
+        "bannerImage": "123"
+    },
+    {
+        "id": "3",
+        "alias": "123",
+        "description": "123",
+        "content": "123",
+        "state": "123",
+        "createdTime": "123",
+        "createdBy": "123",
+        "modifiedTime": "123",
+        "modifiedBy": "123",
+        "ordering": "123",
+        "stick": false,
+        "categories": [
+            {
+                "id": 123,
+                "name": "Tin tức"
+            },
+            {
+                "id": 1223,
+                "name": "Sự kiện"
+            }
+        ],
+        "publishUp": "123",
+        "thumbImage": "123",
+        "tags": [
+            {
+                "id": 123,
+                "name": "Tin tức"
+            },
+            {
+                "id": 1223,
+                "name": "Sự kiện"
+            }
+        ],
+        "feature": true,
+        "featureOrdering": 1,
+        "bannerImage": "123"
+    }
+]

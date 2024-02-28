@@ -1,0 +1,4564 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Open SB Career Website Admin API",
+    "description": "<b>Quy trình các bước thực hiện sinh token để sử dụng Opent API:</b><br>Bước 1: Sinh token bằng api Login và sao chép kết quả token đoạn mã api trả ra<br>Bước 2: Xác thực Authorize bằng mã token đã sao chép bằng nút Authorize<br>Bước 3: Thực hiện gọi các api <br>----------------------------------------------------------------------",
+    "version": "1.0.1"
+  },
+  "servers": [
+    {
+      "url": "https://{url}",
+      "variables": {
+        "url": {
+          "enum": [
+            "sb-career-gw.onbank.vn",
+            "sb-career-uat-gw.seabank.com.vn"
+          ],
+          "default": "sb-career-gw.onbank.vn",
+          "description": "API Server"
+        }
+      }
+    }
+  ],
+  "tags": [
+    {
+      "name": "auth",
+      "description": "Đăng nhập"
+    },
+    {
+      "name": "masterdata",
+      "description": "Quản lý các master data trong hệ thống như thông tin sdt website, facebook, twitter, các loại data picked list"
+    },
+    {
+      "name": "categories",
+      "description": "Quản lý danh mục bài viết trên website"
+    },
+    {
+      "name": "posts",
+      "description": "Quản lý các bài viết, tin tức trên website"
+    },
+    {
+      "name": "users",
+      "description": "Quản lý danh sách user trên hệ thống"
+    },
+    {
+      "name": "recruitments",
+      "description": "Quản lý thông tin tuyển dụng"
+    },
+    {
+      "name": "recruitment-templates",
+      "description": "Quản lý thông tin template hồ sơ ứng tuyển"
+    },
+    {
+      "name": "applicants",
+      "description": "Quản lý hồ sơ ứng viên, phân quyền hồ sơ ứng viên"
+    },
+    {
+      "name": "upload",
+      "description": "Upload file, ảnh lên hệ thống"
+    },
+    {
+      "name": "media-files",
+      "description": "Quản lý các tệp file ảnh đã tải lên"
+    },
+    {
+      "name": "Banners",
+      "description": "Quản lý các banner"
+    }
+  ],
+  "paths": {
+    "/admin/career-service/v1/masterdata/definitions": {
+      "get": {
+        "tags": [
+          "masterdata"
+        ],
+        "summary": "Lấy danh sách các bảng mdm trên hệ thống",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetListMasterDataDefResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/career-service/v1/masterdata/getList": {
+      "post": {
+        "tags": [
+          "masterdata"
+        ],
+        "summary": "Lấy danh sách MDM",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GetListMasterDataRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "default": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetListBaseMasterDataResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/upload-service/v1/cms-upload": {
+      "post": {
+        "tags": [
+          "upload"
+        ],
+        "summary": "Upload file ảnh để biên tập bài viết",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "description": "Upload file ảnh để biên tập bài viết",
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "file": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "default": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UploadFileResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/upload-service/v1/media-files": {
+      "get": {
+        "tags": [
+          "media-files"
+        ],
+        "summary": "Lấy danh sách các file đã upload",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "operationId": "getMediaFiles",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "start",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetMediaFilesResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "media-files"
+        ],
+        "summary": "Xóa các file media đã upload",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "operationId": "deleteMediaFiles",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DeleteMediaFileRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "default": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeleteMediaFileResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/cms-service/v1/categories": {
+      "post": {
+        "tags": [
+          "categories"
+        ],
+        "summary": "Tạo danh mục bài viết",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "description": "Tạo danh mục bài viết",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CategoryRequestBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "default": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BaseDataItemResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "categories"
+        ],
+        "summary": "Cập nhật danh mục bài viết",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "description": "Cập nhật danh mục bài viết",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CategoryRequestUpdateBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "default": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BaseDataItemResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "categories"
+        ],
+        "summary": "Xóa danh mục bài viết",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Xóa danh mục bài viết theo id",
+        "operationId": "deleteCategory",
+        "requestBody": {
+          "required": true,
+          "description": "Danh sách Id cần Xóa",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DeleteCategoryRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "default": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BaseDataItemResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/cms-service/v1/categories/{id}": {
+      "get": {
+        "tags": [
+          "categories"
+        ],
+        "summary": "Lấy thông tin chi tiết 1 danh mục bài viết",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Lấy thông tin danh mục bài viết theo id",
+        "operationId": "getDetailCategory",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetDetailCategoryResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/cms-service/v1/categories/getList": {
+      "post": {
+        "tags": [
+          "categories"
+        ],
+        "summary": "Lấy danh sách danh mục",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GetListCategoryRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "default": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetListCategoryResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/cms-service/v1/posts": {
+      "post": {
+        "tags": [
+          "posts"
+        ],
+        "summary": "Tạo bài viết",
+        "operationId": "createPost",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "description": "Tạo bài viết",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PostRequestBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "default": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BaseDataItemResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "posts"
+        ],
+        "summary": "Cập nhật bài viết",
+        "operationId": "updatePost",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "description": "Cập nhật bài viết",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PostRequestUpdateBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "default": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BaseDataItemResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "posts"
+        ],
+        "summary": "Xóa bài viết",
+        "operationId": "deletePost",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "description": "Lấy id của các bài viết cần xóa",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RequestDeleteBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "default": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BaseDataItemResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/cms-service/v1/posts/{id}": {
+      "get": {
+        "tags": [
+          "posts"
+        ],
+        "summary": "Lấy thông tin chi tiết 1 bài viết",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Lấy thông tin chi tiết bài viết theo id",
+        "operationId": "getDetailPost",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetDetailPostResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/cms-service/v1/posts/getList": {
+      "post": {
+        "tags": [
+          "posts"
+        ],
+        "summary": "Lấy danh sách bài viết",
+        "operationId": "getListPost",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ApiGetPostRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "default": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetListPostResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/career-service/v1/recruitment-templates": {
+      "post": {
+        "tags": [
+          "recruitment-templates"
+        ],
+        "summary": "Tạo mẫu thông tin tuyển dụng",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "operationId": "createRecruitmentTemplate",
+        "requestBody": {
+          "required": true,
+          "description": "Tạo mẫu thông tin tuyển dụng",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateRecruitmentTemplateRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "default": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateRecruitmentTemplateResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "recruitment-templates"
+        ],
+        "summary": "Cập nhật mẫu thông tin tuyển dụng",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "operationId": "updateRecruitmentTemplate",
+        "requestBody": {
+          "required": true,
+          "description": "Cập nhật mẫu thông tin tuyển dụng",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateRecruitmentTemplateRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "default": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UpdateRecruitmentTemplateResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "recruitment-templates"
+        ],
+        "summary": "Xóa mẫu thông tin tuyển dụng",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Xóa mẫu thông tin tuyển dụng theo id",
+        "operationId": "deleteRecruitmentTemplates",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DeleteByIdsRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "default": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeleteRecruitmentTemplatesResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/career-service/v1/recruitment-templates/{recruitmentTemplateId}": {
+      "get": {
+        "tags": [
+          "recruitment-templates"
+        ],
+        "summary": "Lấy thông tin chi tiết mẫu thông tin tuyển dụng",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Lấy thông tin mẫu tuyển dụng theo id",
+        "operationId": "getDetailRecruitmentTemplate",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "recruitmentTemplateId",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetDetailRecruitmentTemplateResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/career-service/v1/recruitment-templates/getList": {
+      "post": {
+        "tags": [
+          "recruitment-templates"
+        ],
+        "summary": "Lấy danh sách mẫu thông tin tuyển dụng",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "operationId": "getListRecruitmentTemplate",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GetListRecruitmentTemplateRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "default": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetListRecruitmentTemplateResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/cms-service/v1/banners": {
+      "post": {
+        "tags": [
+          "Banners"
+        ],
+        "summary": "Tạo mới banner",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "operationId": "createBanner",
+        "requestBody": {
+          "required": true,
+          "description": "Thông tin của banner cần được tạo mới",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateBannerRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "default": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateBannerResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Banners"
+        ],
+        "summary": "Xóa một hoặc nhiều banner",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "operationId": "deleteBanner",
+        "requestBody": {
+          "required": true,
+          "description": "Danh sách Id banner cần xóa",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DeleteBannerRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "default": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeleteBannerResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Banners"
+        ],
+        "summary": "Cập nhật thông tin banner",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Cập nhật thông tin banner",
+        "operationId": "updateBanner",
+        "requestBody": {
+          "required": true,
+          "description": "Danh sách Id banner cần xóa",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateBannerRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "default": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UpdateBannerResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Banners"
+        ],
+        "summary": "Lấy danh sách banner",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "operationId": "getListBanner",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "public",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetListBannerResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/cms-service/v1/banners/order": {
+      "put": {
+        "tags": [
+          "Banners"
+        ],
+        "summary": "Sắp xếp lại vị trí banner",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "operationId": "rearrangePositionBanners",
+        "requestBody": {
+          "required": true,
+          "description": "Danh sách banner sau khi sắp xếp",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RearrangePositionBannerRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "default": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RearrangePositionBannerReponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/cms-service/v1/banners/{id}": {
+      "get": {
+        "tags": [
+          "Banners"
+        ],
+        "summary": "Lấy thông tin chi tiết của banner",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Lấy thông tin chi tiết banner",
+        "operationId": "getBannerById",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetBannerByIdResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/career-service/v1/recruitments": {
+      "post": {
+        "tags": [
+          "recruitments"
+        ],
+        "summary": "Tạo thông tin tuyển dụng",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "operationId": "createRecruitment",
+        "requestBody": {
+          "required": true,
+          "description": "Tạo thông tin tuyển dụng",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateRecruitmentRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "default": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateRecruitmentResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "recruitments"
+        ],
+        "summary": "Cập nhật thông tin tuyển dụng",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "operationId": "updateRecruitment",
+        "requestBody": {
+          "required": true,
+          "description": "Cập nhật thông tin tuyển dụng",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateRecruitmentRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "default": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UpdateRecruitmentResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "recruitments"
+        ],
+        "summary": "Xóa thông tin tuyển dụng",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Xóa thông tin tuyển dụng theo id",
+        "operationId": "deleteRecruitments",
+        "requestBody": {
+          "required": true,
+          "description": "Cập nhật thông tin tuyển dụng",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DeleteByIdsRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "default": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeleteRecruitmentsResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/career-service/v1/recruitments/{recruitmentId}": {
+      "get": {
+        "tags": [
+          "recruitments"
+        ],
+        "summary": "Lấy thông tin chi tiết thông tin tuyển dụng",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Lấy thông tin tuyển dụng theo id",
+        "operationId": "getDetailRecruitment",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "recruitmentId",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetDetailRecruitmentResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/career-service/v1/recruitments/getList": {
+      "post": {
+        "tags": [
+          "recruitments"
+        ],
+        "summary": "Lấy danh sách thông tin tuyển dụng",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "operationId": "getListRecruitment",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GetListRecruitmentRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "default": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetListRecruitmentResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/career-service/v1/recruitments/updateState": {
+      "put": {
+        "tags": [
+          "recruitments"
+        ],
+        "summary": "Cập nhật trạng thái danh sách thông tin tuyển dụng",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "operationId": "updateStateRecruitments",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateStateRecruitmentRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "default": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UpdateStateRecruitmentResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/cms-service/v1/applicants": {
+      "post": {
+        "tags": [
+          "applicants"
+        ],
+        "summary": "Tạo thông tin hồ sơ ứng tuyển",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "description": "Tạo thông tin hồ sơ ứng tuyển",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ApplicantRequestBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "default": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BaseDataItemResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "applicants"
+        ],
+        "summary": "Cập nhật thông tin hồ sơ ứng tuyển",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "description": "Cập nhật thông tin hồ sơ ứng tuyển",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ApplicantRequestUpdateBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "default": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BaseDataItemResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "applicants"
+        ],
+        "summary": "Xóa thông tin hồ sơ ứng tuyển",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Xóa thông tin hồ sơ ứng tuyển theo id",
+        "operationId": "deleteApplicant",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "applicantId",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BaseDataItemResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "applicants"
+        ],
+        "summary": "Lấy thông tin chi tiết thông tin hồ sơ ứng tuyển",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Lấy thông tin hồ sơ ứng tuyển theo id",
+        "operationId": "getDetailApplicant",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "applicantId",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetDetailApplicantResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/cms-service/v1/applicants/getList": {
+      "post": {
+        "tags": [
+          "applicants"
+        ],
+        "summary": "Lấy danh sách hồ sơ ứng tuyển",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "operationId": "getListApplicant",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ApiBaseRequestBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "default": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetListApplicantResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/auth-service/v1/login": {
+      "post": {
+        "tags": [
+          "auth"
+        ],
+        "summary": "đăng nhập hệ thống",
+        "operationId": "login",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "default": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LoginResponseSuccess"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/auth-service/v1/refreshtoken": {
+      "post": {
+        "tags": [
+          "auth"
+        ],
+        "summary": "nếu thực hiện các api response error code = 6 thì dùng api này để lấy access token mới",
+        "operationId": "refreshToken",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RefreshTokenRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "default": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RefreshTokenResponseSuccess"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/public/cms-service/v1/posts": {
+      "post": {
+        "tags": [
+          "posts"
+        ],
+        "summary": "Lấy danh sách bài viết cho người dùng",
+        "operationId": "getListPostForUser",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ApiGetPostRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "default": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetListPostResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/public/cms-service/v1/posts/{id}": {
+      "get": {
+        "tags": [
+          "posts"
+        ],
+        "summary": "Lấy thông tin chi tiết cho người dùng",
+        "description": "Lấy thông tin chi tiết cho người dùng theo id",
+        "operationId": "getPostForUserById",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetDetailPostPublicResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/public/cms-service/v1/getListBannerPublic": {
+      "get": {
+        "tags": [
+          "Banners"
+        ],
+        "summary": "Lấy danh sách banner",
+        "operationId": "getListBanner",
+        "responses": {
+          "default": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetListBannerResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "RefreshTokenRequest": {
+        "type": "object",
+        "properties": {
+          "refreshToken": {
+            "type": "string",
+            "description": "refreshToken",
+            "example": "207ca6db-1ed7-4f5b-8e6d-00021c99fe6c"
+          }
+        }
+      },
+      "RefreshTokenResponseSuccess": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/BaseDataItemResponse"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "data": {
+                "type": "object",
+                "properties": {
+                  "accessToken": {
+                    "type": "string",
+                    "description": "token user"
+                  },
+                  "userId": {
+                    "type": "string",
+                    "description": "userId của người dùng"
+                  },
+                  "refreshToken": {
+                    "type": "string",
+                    "description": "Refresh token"
+                  },
+                  "tokenType": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        ]
+      },
+      "LoginRequest": {
+        "type": "object",
+        "properties": {
+          "username": {
+            "type": "string",
+            "description": "Tên đăng nhập",
+            "example": "admin1"
+          },
+          "password": {
+            "type": "string",
+            "description": "Mật khẩu",
+            "example": 123123
+          }
+        }
+      },
+      "LoginResponseSuccess": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/BaseDataItemResponse"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "data": {
+                "type": "object",
+                "properties": {
+                  "accessToken": {
+                    "type": "string",
+                    "description": "token user"
+                  },
+                  "userId": {
+                    "type": "string",
+                    "description": "userId của người dùng"
+                  },
+                  "refreshToken": {
+                    "type": "string",
+                    "description": "Refresh token"
+                  },
+                  "tokenType": {
+                    "type": "string"
+                  },
+                  "expires": {
+                    "type": "integer",
+                    "format": "int64"
+                  }
+                }
+              }
+            }
+          }
+        ]
+      },
+      "Category": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32",
+            "example": 1
+          },
+          "title": {
+            "type": "string",
+            "example": "Tin tức"
+          },
+          "path": {
+            "type": "string",
+            "example": ""
+          },
+          "description": {
+            "type": "string",
+            "example": "Mô tả danh mục"
+          },
+          "createdTime": {
+            "type": "string",
+            "format": "date-time",
+            "example": "30/05/1978 02:34:56"
+          },
+          "modifiedTime": {
+            "type": "string",
+            "format": "date-time",
+            "example": "30/05/1978 02:34:56"
+          },
+          "createdBy": {
+            "type": "string",
+            "example": "user1"
+          },
+          "modifiedBy": {
+            "type": "string",
+            "example": "user1"
+          }
+        },
+        "xml": {
+          "name": "category"
+        }
+      },
+      "CategoryRequestBody": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "example": "Tin tức"
+          },
+          "path": {
+            "type": "string",
+            "example": ""
+          },
+          "description": {
+            "type": "string",
+            "example": "Mô tả danh mục"
+          }
+        },
+        "required": [
+          "title",
+          "description"
+        ],
+        "xml": {
+          "name": "categoryRequestBody"
+        }
+      },
+      "CategoryRequestUpdateBody": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/CategoryRequestBody"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "integer",
+                "description": "Mã danh mục"
+              }
+            }
+          }
+        ],
+        "required": [
+          "title",
+          "description",
+          "id"
+        ]
+      },
+      "Post": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32",
+            "example": 1
+          },
+          "title": {
+            "type": "string",
+            "example": "Bài viết 1"
+          },
+          "slug": {
+            "type": "string",
+            "example": "bai-viet-1"
+          },
+          "description": {
+            "type": "string",
+            "example": "Mô tả bài viết"
+          },
+          "content": {
+            "type": "string",
+            "example": "Nội dung bài viết"
+          },
+          "state": {
+            "type": "string",
+            "enum": [
+              "DRAFT",
+              "ACTIVE",
+              "DELETED",
+              "INACTIVE",
+              "PUBLISHED"
+            ],
+            "description": "Trạng thái bài viết: 'DRAFT','ACTIVE','DELETED','INACTIVE'"
+          },
+          "createdTime": {
+            "type": "string",
+            "format": "date-time",
+            "example": "30-05-1978 02:34:56"
+          },
+          "modifiedTime": {
+            "type": "string",
+            "format": "date-time",
+            "example": "30-05-1978 02:34:56"
+          },
+          "createdBy": {
+            "type": "string",
+            "example": "user1"
+          },
+          "modifiedBy": {
+            "type": "string",
+            "example": "user1"
+          },
+          "stick": {
+            "type": "boolean",
+            "example": false
+          },
+          "stickTime": {
+            "type": "string",
+            "format": "date-time",
+            "example": "30-05-1978 02:34:56"
+          },
+          "thumbImage": {
+            "type": "string",
+            "example": "https://cdn.tgdd.vn/Files/2017/02/16/950437/anhthunho1_800x450.jpg"
+          },
+          "categories": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "number",
+                  "example": 1
+                },
+                "title": {
+                  "type": "string",
+                  "example": "Vay tiền"
+                }
+              }
+            }
+          },
+          "iconUrl": {
+            "type": "string",
+            "example": "https://cdn.tgdd.vn/Files/2017/02/16/950437/anhthunho1_800x450.jpg"
+          }
+        },
+        "xml": {
+          "name": "post"
+        }
+      },
+      "PostList": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "example": 1
+          },
+          "title": {
+            "type": "string",
+            "example": "Bài viết 1"
+          },
+          "state": {
+            "type": "string",
+            "example": "ACTIVE",
+            "description": "Trạng thái bài viết: 'DRAFT','ACTIVE','DELETED'"
+          },
+          "createdTime": {
+            "type": "string",
+            "format": "date-time",
+            "example": "30-05-1978 02:34:56"
+          },
+          "stick": {
+            "type": "boolean",
+            "example": false
+          },
+          "stickTime": {
+            "type": "string",
+            "format": "date-time",
+            "example": "30-05-1978 02:34:56"
+          },
+          "thumbImage": {
+            "type": "string",
+            "example": "https://cdn.tgdd.vn/Files/2017/02/16/950437/anhthunho1_800x450.jpg"
+          },
+          "categories": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "number",
+                  "example": 1
+                },
+                "title": {
+                  "type": "string",
+                  "example": "Vay tiền"
+                }
+              }
+            }
+          },
+          "iconUrl": {
+            "type": "string",
+            "example": "https://cdn.tgdd.vn/Files/2017/02/16/950437/anhthunho1_800x450.jpg"
+          }
+        }
+      },
+      "PostDetailPublic": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "example": 1
+          },
+          "title": {
+            "type": "string",
+            "example": "Bài viết 1"
+          },
+          "thumbImage": {
+            "type": "string",
+            "example": "https://cdn.tgdd.vn/Files/2017/02/16/950437/anhthunho1_800x450.jpg"
+          },
+          "description": {
+            "type": "string",
+            "example": "Mô tả bài viết"
+          },
+          "content": {
+            "type": "string",
+            "example": "Nội dung bài viết"
+          },
+          "categories": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "number",
+                  "example": 1
+                },
+                "title": {
+                  "type": "string",
+                  "example": "Vay tiền"
+                }
+              }
+            }
+          },
+          "iconUrl": {
+            "type": "string",
+            "example": "https://cdn.tgdd.vn/Files/2017/02/16/950437/anhthunho1_800x450.jpg"
+          },
+          "stick": {
+            "type": "boolean",
+            "example": false
+          }
+        }
+      },
+      "PostRequestBody": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "example": "Bài viết 1"
+          },
+          "slug": {
+            "type": "string",
+            "example": "bai-viet-1"
+          },
+          "description": {
+            "type": "string",
+            "example": "Mô tả bài viết"
+          },
+          "content": {
+            "type": "string",
+            "example": "Nội dung bài viết"
+          },
+          "state": {
+            "type": "string",
+            "example": "ACTIVE"
+          },
+          "stick": {
+            "type": "boolean",
+            "example": false
+          },
+          "thumbImage": {
+            "type": "string",
+            "example": "https://cdn.tgdd.vn/Files/2017/02/16/950437/anhthunho1_800x450.jpg"
+          },
+          "categories": {
+            "type": "array",
+            "items": {
+              "type": "number"
+            },
+            "example": [
+              1,
+              2
+            ]
+          },
+          "iconUrl": {
+            "type": "string",
+            "example": "https://cdn.tgdd.vn/Files/2017/02/16/950437/anhthunho1_800x450.jpg"
+          }
+        },
+        "required": [
+          "title",
+          "slug",
+          "description",
+          "content",
+          "state"
+        ]
+      },
+      "PostRequestUpdateBody": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/PostRequestBody"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "integer",
+                "description": "Mã bài viết"
+              }
+            }
+          }
+        ],
+        "required": [
+          "title",
+          "slug",
+          "description",
+          "content",
+          "state",
+          "id"
+        ]
+      },
+      "RequestDeleteBody": {
+        "type": "object",
+        "properties": {
+          "ids": {
+            "type": "array",
+            "items": {
+              "type": "integer"
+            },
+            "example": [
+              1,
+              2,
+              3
+            ]
+          }
+        }
+      },
+      "RecruitmentData": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "mã thông tin tuyển dụng tự sinh trên hệ thống"
+          },
+          "code": {
+            "type": "string",
+            "description": "mã thông tin tuyển dụng do người quản trị nhập"
+          },
+          "jobTitle": {
+            "type": "string",
+            "description": "chức danh"
+          }
+        }
+      },
+      "RecruitmentList": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "mã thông tin tuyển dụng tự sinh trên hệ thống"
+          },
+          "code": {
+            "type": "string",
+            "description": "mã thông tin tuyển dụng do người quản trị nhập"
+          },
+          "jobTitle": {
+            "type": "string",
+            "description": "chức danh"
+          },
+          "validThrough": {
+            "description": "Hạn nộp hồ sơ",
+            "type": "string",
+            "format": "date-time",
+            "example": "30/05/1978 02:34:56"
+          },
+          "state": {
+            "type": "string",
+            "description": "Trạng thái thông tin tuyển dụng",
+            "enum": [
+              "PENDING",
+              "WATTING_APPROVED",
+              "SEND_BACK",
+              "REJECTED",
+              "ACTIVE",
+              "INACTIVE"
+            ]
+          },
+          "createdBy": {
+            "type": "string",
+            "description": "Người tạo thông tin tuyển dụng"
+          },
+          "modifiedBy": {
+            "type": "string",
+            "description": "Người chỉnh sửa thông tin tuyển dụng"
+          },
+          "createdTime": {
+            "type": "string",
+            "format": "date-time",
+            "example": "30/05/1978 02:34:56"
+          },
+          "modifiedTime": {
+            "type": "string",
+            "format": "date-time",
+            "example": "30/05/1978 02:34:56"
+          },
+          "publishUpDate": {
+            "type": "string",
+            "format": "date-time",
+            "example": "30/05/1978 02:34:56"
+          },
+          "viewCounting": {
+            "type": "integer",
+            "description": "Số lượt xem thông tin đăng tuyển"
+          },
+          "applicationCounting": {
+            "type": "integer",
+            "description": "Số hồ sơ nộp vào"
+          }
+        }
+      },
+      "RecruitmentDeleteData": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "mã thông tin tuyển dụng tự sinh trên hệ thống"
+          }
+        }
+      },
+      "Recruitment": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "Mã thông tin tuyển dụng"
+          },
+          "code": {
+            "type": "string",
+            "description": "Mã công việc do người quản trị tự nhập"
+          },
+          "jobTitle": {
+            "type": "string",
+            "description": "Chức danh/ vị trí tuyển dụng"
+          },
+          "description": {
+            "type": "string",
+            "description": "mô tả khác về thông tin tuyển dụng"
+          },
+          "experienceRequirementDescriptions": {
+            "type": "string",
+            "description": "Mô tả về yêu cầu kinh nghiệm công việc"
+          },
+          "industry": {
+            "type": "array",
+            "description": "Ngành nghề",
+            "items": {
+              "type": "string"
+            }
+          },
+          "salaryType": {
+            "type": "string",
+            "description": "Loại lương: thỏa thuận, gross, net"
+          },
+          "salaryCurrency": {
+            "type": "string",
+            "description": "Đơn vị tiền tệ"
+          },
+          "salaryMinValue": {
+            "type": "number",
+            "description": "Lương tối thiểu"
+          },
+          "salaryMaxValue": {
+            "type": "number",
+            "description": "Lương tối đa"
+          },
+          "employmentTypes": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Hình thức công việc: chính thức, parttime,..."
+          },
+          "validThrough": {
+            "description": "Hạn nộp hồ sơ",
+            "type": "string",
+            "format": "date-time",
+            "example": "30/05/1978 02:34:56"
+          },
+          "jobBenefits": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Phúc lợi công việc"
+          },
+          "gender": {
+            "type": "string",
+            "description": "giới tính"
+          },
+          "ageFrom": {
+            "type": "integer",
+            "description": "Độ tuổi tối thiểu"
+          },
+          "ageTo": {
+            "type": "integer",
+            "description": "Độ tuổi tối đa"
+          },
+          "monthsOfExperienceFrom": {
+            "type": "integer",
+            "description": "số tháng yêu cầu kinh nghiệm tối thiểu"
+          },
+          "monthsOfExperienceTo": {
+            "type": "integer",
+            "description": "số tháng yêu cầu kinh nghiệm tối đa"
+          },
+          "occupationalCategory": {
+            "type": "string",
+            "description": "cấp bậc"
+          },
+          "qualifications": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "bằng cấp"
+          },
+          "skills": {
+            "type": "string",
+            "description": "Kỹ năng yêu cầu (người dùng tự nhập)"
+          },
+          "jobAmount": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Số lượng cần tuyển"
+          },
+          "note": {
+            "type": "string",
+            "description": "Ghi chú của người quản trị về thông tin đăng tuyển",
+            "example": "Ghi chú  thêm"
+          },
+          "reasonJobPostings": {
+            "type": "string",
+            "description": "Lý do đăng tin tuyển dụng"
+          },
+          "jobLocations": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Danh sách nơi làm việc"
+          },
+          "departments": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Phòng ban"
+          },
+          "state": {
+            "type": "string",
+            "description": "Trạng thái thông tin tuyển dụng",
+            "enum": [
+              "PENDING",
+              "WATTING_APPROVED",
+              "SEND_BACK",
+              "REJECTED",
+              "ACTIVE",
+              "INACTIVE"
+            ]
+          },
+          "createdBy": {
+            "type": "string",
+            "description": "Người tạo thông tin tuyển dụng"
+          },
+          "modifiedBy": {
+            "type": "string",
+            "description": "Người chỉnh sửa thông tin tuyển dụng"
+          },
+          "createdTime": {
+            "type": "string",
+            "format": "date-time",
+            "example": "30/05/1978 02:34:56"
+          },
+          "modifiedTime": {
+            "type": "string",
+            "format": "date-time",
+            "example": "30/05/1978 02:34:56"
+          },
+          "publishUpDate": {
+            "type": "string",
+            "format": "date-time",
+            "example": "30/05/1978 02:34:56"
+          },
+          "publishDownDate": {
+            "type": "string",
+            "format": "date-time",
+            "example": "30/05/1978 02:34:56"
+          },
+          "isExpired": {
+            "type": "boolean",
+            "description": "Trạng thái tuyển dụng đã hết hạn hay chưa "
+          },
+          "jobAddress": {
+            "type": "string",
+            "description": "Địa chỉ nơi làm việc"
+          },
+          "payroll": {
+            "type": "string",
+            "description": "Hình thức trả lương"
+          }
+        }
+      },
+      "CreateRecruitmentRequest": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/CreateRecruitmentTemplateRequest"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "jobAmount": {
+                "type": "integer",
+                "format": "int32",
+                "description": "Số lượng cần tuyển"
+              },
+              "state": {
+                "type": "string",
+                "description": "Trạng thái thông tin tuyển dụng",
+                "enum": [
+                  "PENDING",
+                  "WATTING_APPROVED",
+                  "SEND_BACK",
+                  "REJECTED",
+                  "ACTIVE",
+                  "INACTIVE"
+                ]
+              }
+            }
+          }
+        ],
+        "required": [
+          "code",
+          "jobTitle",
+          "description",
+          "experienceRequirementDescriptions",
+          "industry",
+          "salaryCurrencyvalid_through",
+          "employmentTypes",
+          "validThrough",
+          "jobBenefits",
+          "gender",
+          "occupationalCategory",
+          "qualifications",
+          "jobAmount"
+        ]
+      },
+      "UpdateRecruitmentRequest": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/CreateRecruitmentRequest"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "integer",
+                "description": "Mã thông tin tuyển dụng"
+              }
+            }
+          },
+          {
+            "type": "object",
+            "properties": {
+              "jobAmount": {
+                "type": "integer",
+                "format": "int32",
+                "description": "Số lượng cần tuyển"
+              },
+              "state": {
+                "type": "string",
+                "description": "Trạng thái thông tin tuyển dụng",
+                "enum": [
+                  "PENDING",
+                  "WATTING_APPROVED",
+                  "SEND_BACK",
+                  "REJECTED",
+                  "ACTIVE",
+                  "INACTIVE"
+                ]
+              }
+            }
+          }
+        ],
+        "required": [
+          "code",
+          "jobTitle",
+          "description",
+          "experienceRequirementDescriptions",
+          "industry",
+          "salaryCurrencyvalid_through",
+          "employmentTypes",
+          "validThrough",
+          "jobBenefits",
+          "gender",
+          "occupationalCategory",
+          "qualifications",
+          "jobAmount",
+          "id"
+        ]
+      },
+      "CreateRecruitmentResponse": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/BaseDataItemResponse"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "data": {
+                "$ref": "#/components/schemas/RecruitmentData"
+              }
+            }
+          }
+        ]
+      },
+      "UpdateRecruitmentResponse": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/BaseDataItemResponse"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "data": {
+                "$ref": "#/components/schemas/RecruitmentData"
+              }
+            }
+          }
+        ]
+      },
+      "RecruitmentTemplateData": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "mã mẫu thông tin tuyển dụng tự sinh trên hệ thống"
+          },
+          "code": {
+            "type": "string",
+            "description": "mã thông tin tuyển dụng do người quản trị nhập"
+          },
+          "jobTitle": {
+            "type": "string",
+            "description": "chức danh"
+          }
+        }
+      },
+      "RecruitmentTemplateList": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "mã mẫu thông tin tuyển dụng tự sinh trên hệ thống"
+          },
+          "code": {
+            "type": "string",
+            "description": "mã thông tin tuyển dụng do người quản trị nhập"
+          },
+          "jobTitle": {
+            "type": "string",
+            "description": "chức danh"
+          },
+          "jobLocations": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Danh sách nơi làm việc"
+          },
+          "createdBy": {
+            "type": "string",
+            "description": "Người tạo mẫu thông tin tuyển dụng"
+          },
+          "modifiedBy": {
+            "type": "string",
+            "description": "Người chỉnh sửa mẫu thông tin tuyển dụng"
+          },
+          "createdTime": {
+            "type": "string",
+            "format": "date-time",
+            "example": "30/05/1978 02:34:56"
+          },
+          "modifiedTime": {
+            "type": "string",
+            "format": "date-time",
+            "example": "30/05/1978 02:34:56"
+          }
+        }
+      },
+      "RecruitmentTemplateDeleteData": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "mã thông tin tuyển dụng tự sinh trên hệ thống"
+          }
+        }
+      },
+      "RecruitmentTemplate": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "Mã mẫu thông tin tuyển dụng"
+          },
+          "code": {
+            "type": "string",
+            "description": "Mã công việc do người quản trị tự nhập"
+          },
+          "jobTitle": {
+            "type": "string",
+            "description": "Chức danh/ vị trí tuyển dụng"
+          },
+          "description": {
+            "type": "string",
+            "description": "mô tả khác về thông tin tuyển dụng"
+          },
+          "experienceRequirementDescriptions": {
+            "type": "string",
+            "description": "Mô tả về yêu cầu kinh nghiệm công việc"
+          },
+          "industry": {
+            "type": "array",
+            "description": "Ngành nghề",
+            "items": {
+              "type": "string"
+            }
+          },
+          "salaryType": {
+            "type": "string",
+            "description": "Loại lương: thỏa thuận, gross, net"
+          },
+          "salaryCurrency": {
+            "type": "string",
+            "description": "Đơn vị tiền tệ"
+          },
+          "salaryMinValue": {
+            "type": "number",
+            "description": "Lương tối thiểu"
+          },
+          "salaryMaxValue": {
+            "type": "number",
+            "description": "Lương tối đa"
+          },
+          "employmentTypes": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Hình thức công việc: chính thức, parttime,..."
+          },
+          "validThrough": {
+            "description": "Hạn nộp hồ sơ",
+            "type": "string",
+            "format": "date-time",
+            "example": "30/05/1978 02:34:56"
+          },
+          "jobBenefits": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Phúc lợi công việc"
+          },
+          "gender": {
+            "type": "string",
+            "description": "giới tính"
+          },
+          "ageFrom": {
+            "type": "integer",
+            "description": "Độ tuổi tối thiểu"
+          },
+          "ageTo": {
+            "type": "integer",
+            "description": "Độ tuổi tối đa"
+          },
+          "monthsOfExperienceFrom": {
+            "type": "integer",
+            "description": "số tháng yêu cầu kinh nghiệm tối thiểu"
+          },
+          "monthsOfExperienceTo": {
+            "type": "integer",
+            "description": "số tháng yêu cầu kinh nghiệm tối đa"
+          },
+          "occupationalCategory": {
+            "type": "string",
+            "description": "cấp bậc"
+          },
+          "qualifications": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "bằng cấp"
+          },
+          "skills": {
+            "type": "string",
+            "description": "Kỹ năng yêu cầu (người dùng tự nhập)"
+          },
+          "note": {
+            "type": "string",
+            "description": "Ghi chú của người quản trị về thông tin đăng tuyển",
+            "example": "Ghi chú  thêm"
+          },
+          "reasonJobPostings": {
+            "type": "string",
+            "description": "Lý do đăng tin tuyển dụng"
+          },
+          "jobLocations": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Danh sách nơi làm việc"
+          },
+          "departments": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Phòng ban"
+          },
+          "jobAddress": {
+            "type": "string",
+            "description": "Địa chỉ nơi làm việc"
+          },
+          "payroll": {
+            "type": "string",
+            "description": "Hình thức trả lương"
+          },
+          "createdBy": {
+            "type": "string",
+            "description": "Người tạo mẫu thông tin tuyển dụng"
+          },
+          "modifiedBy": {
+            "type": "string",
+            "description": "Người chỉnh sửa mẫu thông tin tuyển dụng"
+          },
+          "createdTime": {
+            "type": "string",
+            "format": "date-time",
+            "example": "30/05/1978 02:34:56"
+          },
+          "modifiedTime": {
+            "type": "string",
+            "format": "date-time",
+            "example": "30/05/1978 02:34:56"
+          }
+        }
+      },
+      "CreateRecruitmentTemplateRequest": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string",
+            "description": "Mã công việc do người quản trị tự nhập"
+          },
+          "jobTitle": {
+            "type": "string",
+            "description": "Chức danh/ vị trí tuyển dụng"
+          },
+          "description": {
+            "type": "string",
+            "description": "mô tả khác về công việc"
+          },
+          "experienceRequirementDescriptions": {
+            "type": "string",
+            "description": "Mô tả về yêu cầu kinh nghiệm công việc"
+          },
+          "industry": {
+            "type": "array",
+            "description": "Ngành nghề",
+            "items": {
+              "type": "string"
+            }
+          },
+          "salaryType": {
+            "type": "string",
+            "description": "Loại lương: thỏa thuận, gross, net"
+          },
+          "salaryCurrency": {
+            "type": "string",
+            "description": "Đơn vị tiền tệ"
+          },
+          "salaryMinValue": {
+            "type": "number",
+            "description": "Lương tối thiểu"
+          },
+          "salaryMaxValue": {
+            "type": "number",
+            "description": "Lương tối đa"
+          },
+          "employmentTypes": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Hình thức công việc: chính thức, parttime,..."
+          },
+          "validThrough": {
+            "type": "string",
+            "description": "Hạn nộp hồ sơ",
+            "format": "int64",
+            "example": "1691503424000"
+          },
+          "jobBenefits": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Phúc lợi công việc"
+          },
+          "gender": {
+            "type": "string",
+            "description": "giới tính"
+          },
+          "ageFrom": {
+            "type": "integer",
+            "description": "Độ tuổi tối thiểu"
+          },
+          "ageTo": {
+            "type": "integer",
+            "description": "Độ tuổi tối đa"
+          },
+          "monthsOfExperienceFrom": {
+            "type": "integer",
+            "description": "số tháng yêu cầu kinh nghiệm tối thiểu"
+          },
+          "monthsOfExperienceTo": {
+            "type": "integer",
+            "description": "số tháng yêu cầu kinh nghiệm tối đa"
+          },
+          "experienceRequirementsType": {
+            "type": "string",
+            "description": "Loại kinh nghiệm yêu cầu: lâu năm, mới,..."
+          },
+          "occupationalCategory": {
+            "type": "string",
+            "description": "cấp bậc"
+          },
+          "qualifications": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "bằng cấp"
+          },
+          "skills": {
+            "type": "string",
+            "description": "Kỹ năng yêu cầu (người dùng tự nhập)"
+          },
+          "note": {
+            "type": "string",
+            "description": "Ghi chú của người quản trị về thông tin đăng tuyển",
+            "example": "Ghi chú  thêm"
+          },
+          "reasonJobPostings": {
+            "type": "string",
+            "description": "Lý do đăng tin tuyển dụng"
+          },
+          "jobLocations": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Danh sách nơi làm việc"
+          },
+          "departments": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Phòng ban"
+          },
+          "jobAddress": {
+            "type": "string",
+            "description": "Địa chỉ nơi làm việc"
+          },
+          "payroll": {
+            "type": "string",
+            "description": "Hình thức trả lương"
+          }
+        },
+        "required": [
+          "code",
+          "jobTitle",
+          "description",
+          "experienceRequirementDescriptions",
+          "industry",
+          "salaryCurrencyvalid_through",
+          "employmentTypes",
+          "validThrough",
+          "jobBenefits",
+          "gender",
+          "occupationalCategory",
+          "qualifications",
+          "jobAmount"
+        ]
+      },
+      "UpdateRecruitmentTemplateRequest": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/CreateRecruitmentTemplateRequest"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "integer",
+                "description": "Mã mẫu thông tin tuyển dụng"
+              }
+            }
+          }
+        ],
+        "required": [
+          "code",
+          "jobTitle",
+          "description",
+          "experienceRequirementDescriptions",
+          "industry",
+          "salaryCurrencyvalid_through",
+          "employmentTypes",
+          "validThrough",
+          "jobBenefits",
+          "gender",
+          "occupationalCategory",
+          "qualifications",
+          "id"
+        ]
+      },
+      "CreateRecruitmentTemplateResponse": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/BaseDataItemResponse"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "data": {
+                "$ref": "#/components/schemas/RecruitmentTemplateData"
+              }
+            }
+          }
+        ]
+      },
+      "UpdateRecruitmentTemplateResponse": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/BaseDataItemResponse"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "data": {
+                "$ref": "#/components/schemas/RecruitmentTemplateData"
+              }
+            }
+          }
+        ]
+      },
+      "Applicant": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Mã hồ sơ ứng tuyển"
+          },
+          "note": {
+            "type": "string",
+            "description": "Ghi chú"
+          },
+          "email": {
+            "type": "string",
+            "description": "Email của người ứng tuyển"
+          },
+          "description": {
+            "type": "string",
+            "description": "Chú thích"
+          },
+          "address": {
+            "type": "string",
+            "description": "Địa chỉ nơi ở người ứng tuyển"
+          },
+          "phone": {
+            "type": "string",
+            "description": "Số điện thoại của người ứng tuyển"
+          },
+          "job": {
+            "type": "string",
+            "description": "Vị trí ứng tuyển"
+          },
+          "jobProvince": {
+            "type": "string",
+            "description": "Tỉnh thành nơi ứng tuyển"
+          },
+          "jobTarget": {
+            "type": "string",
+            "description": "Mục tiêu nghề nghiệp"
+          },
+          "utmSource": {
+            "type": "string",
+            "description": "Nguồn hồ sơ ứng tuyển"
+          },
+          "utmMedium": {
+            "type": "string",
+            "description": "Phương thức truy cập SMS, email,..."
+          },
+          "utmCampaign": {
+            "type": "string",
+            "description": "Tên chiến dịch"
+          },
+          "utmContent": {
+            "type": "string",
+            "description": "loại nội dung quảng cáo- logo, banner"
+          },
+          "utmTerm": {
+            "type": "string",
+            "description": "từ khóa quảng cáo"
+          },
+          "lastName": {
+            "type": "string",
+            "description": "Tên của người ứng tuyển"
+          },
+          "firstName": {
+            "type": "string",
+            "description": "Họ và đệm của người ứng tuyển"
+          },
+          "province": {
+            "type": "string",
+            "description": "Tên tỉnh/ thành phố nơi ở của người ứng tuyển"
+          },
+          "avatarUrl": {
+            "type": "string",
+            "description": "Ảnh của ứng viên"
+          },
+          "usersId": {
+            "type": "string",
+            "description": "mã định danh của người ứng tuyển trên hệ thống"
+          },
+          "gender": {
+            "type": "string",
+            "description": "giới tính"
+          },
+          "maritalStatus": {
+            "type": "string",
+            "description": "Tình trạng hôn nhân"
+          },
+          "dob": {
+            "type": "string",
+            "format": "date-time",
+            "example": "30/05/1978 02:34:56",
+            "description": "Ngày sinh"
+          },
+          "qualifications": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Bằng cấp người ứng tuyển"
+          },
+          "jobWorked": {
+            "type": "string",
+            "description": "Công việc đã từng làm"
+          },
+          "yearExperience": {
+            "type": "string",
+            "description": "Số năm kinh nghiệm"
+          },
+          "occupationalCategory": {
+            "type": "string",
+            "description": "Cấp bậc vị trí ứng tuyển"
+          },
+          "recruitmentId": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Mã thông tin đăng tuyển"
+          },
+          "createdTime": {
+            "type": "string",
+            "description": "Thời gian tạo",
+            "format": "date-time",
+            "example": "30/05/1978 02:34:56"
+          },
+          "modifiedTime": {
+            "type": "string",
+            "description": "Thời gian chỉnh sửa",
+            "format": "date-time",
+            "example": "30/05/1978 02:34:56"
+          },
+          "createdBy": {
+            "type": "string",
+            "description": "Người tạo"
+          },
+          "modifiedBy": {
+            "type": "string",
+            "description": "Người chỉnh sửa"
+          }
+        }
+      },
+      "ApplicantRequestBody": {
+        "type": "object",
+        "properties": {
+          "note": {
+            "type": "string",
+            "description": "Ghi chú"
+          },
+          "email": {
+            "type": "string",
+            "description": "Email của người ứng tuyển"
+          },
+          "description": {
+            "type": "string",
+            "description": "Chú thích"
+          },
+          "address": {
+            "type": "string",
+            "description": "Địa chỉ nơi ở người ứng tuyển"
+          },
+          "phone": {
+            "type": "string",
+            "description": "Số điện thoại của người ứng tuyển"
+          },
+          "job": {
+            "type": "string",
+            "description": "Vị trí ứng tuyển"
+          },
+          "jobProvince": {
+            "type": "string",
+            "description": "Tỉnh thành nơi ứng tuyển"
+          },
+          "jobTarget": {
+            "type": "string",
+            "description": "Mục tiêu nghề nghiệp"
+          },
+          "utmSource": {
+            "type": "string",
+            "description": "Nguồn hồ sơ ứng tuyển"
+          },
+          "utmMedium": {
+            "type": "string",
+            "description": "Phương thức truy cập SMS, email,..."
+          },
+          "utmCampaign": {
+            "type": "string",
+            "description": "Tên chiến dịch"
+          },
+          "utmContent": {
+            "type": "string",
+            "description": "loại nội dung quảng cáo- logo, banner"
+          },
+          "utmTerm": {
+            "type": "string",
+            "description": "từ khóa quảng cáo"
+          },
+          "lastName": {
+            "type": "string",
+            "description": "Tên của người ứng tuyển"
+          },
+          "firstName": {
+            "type": "string",
+            "description": "Họ và đệm của người ứng tuyển"
+          },
+          "province": {
+            "type": "string",
+            "description": "Tên tỉnh/ thành phố nơi ở của người ứng tuyển"
+          },
+          "avatarUrl": {
+            "type": "string",
+            "description": "Ảnh của ứng viên"
+          },
+          "usersId": {
+            "type": "string",
+            "description": "mã định danh của người ứng tuyển trên hệ thống"
+          },
+          "gender": {
+            "type": "string",
+            "description": "giới tính"
+          },
+          "maritalStatus": {
+            "type": "string",
+            "description": "Tình trạng hôn nhân"
+          },
+          "dob": {
+            "type": "string",
+            "format": "date-time",
+            "example": "30/05/1978 02:34:56",
+            "description": "Ngày sinh"
+          },
+          "qualifications": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Bằng cấp người ứng tuyển"
+          },
+          "jobWorked": {
+            "type": "string",
+            "description": "Công việc đã từng làm"
+          },
+          "yearExperience": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Số năm kinh nghiệm"
+          },
+          "occupationalCategory": {
+            "type": "string",
+            "description": "Cấp bậc vị trí ứng tuyển"
+          },
+          "recruitmentId": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Mã thông tin đăng tuyển"
+          }
+        },
+        "required": [
+          "email",
+          "recruitmentId",
+          "address",
+          "phone",
+          "job",
+          "jobProvince",
+          "jobTarget",
+          "lastName",
+          "firstName",
+          "province",
+          "avatarUrl",
+          "jobWorked",
+          "qualifications",
+          "jobAmount",
+          "yearExperience",
+          "occupationalCategory"
+        ]
+      },
+      "ApplicantRequestUpdateBody": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/ApplicantRequestBody"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "integer",
+                "description": "Mã thông tin hồ sơ ứng tuyển"
+              }
+            }
+          }
+        ],
+        "required": [
+          "email",
+          "recruitmentId",
+          "address",
+          "phone",
+          "job",
+          "jobProvince",
+          "jobTarget",
+          "lastName",
+          "firstName",
+          "province",
+          "avatarUrl",
+          "jobWorked",
+          "qualifications",
+          "jobAmount",
+          "yearExperience",
+          "occupationalCategory",
+          "id"
+        ]
+      },
+      "UploadFileResponse": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/BaseDataItemResponse"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "data": {
+                "type": "object",
+                "properties": {
+                  "fileName": {
+                    "type": "string",
+                    "description": "tên file upload"
+                  },
+                  "url": {
+                    "type": "string",
+                    "description": "url file"
+                  },
+                  "id": {
+                    "type": "integer",
+                    "description": "Id file"
+                  },
+                  "iconUrl": {
+                    "type": "string",
+                    "description": "url ảnh thumb của file"
+                  }
+                }
+              }
+            }
+          }
+        ]
+      },
+      "GetListRecruitmentTemplateRequest": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/BaseRequestBody"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "industry": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "Ngành nghề"
+              },
+              "departments": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "Phòng ban"
+              }
+            }
+          }
+        ]
+      },
+      "ApiBaseRequestBody": {
+        "type": "object",
+        "properties": {
+          "start": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Lấy bản ghi từ trang",
+            "example": 0
+          },
+          "limit": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Số lượng bản ghi tối đa"
+          },
+          "keywords": {
+            "type": "string",
+            "description": "Từ khóa tìm kiếm"
+          },
+          "sortField": {
+            "type": "string",
+            "description": "Tên field để sắp xếp bản ghi khi lấy dữ liệu"
+          },
+          "sortType": {
+            "type": "string",
+            "description": "Loại sắp xếp ( ASC hoặc DESC)"
+          },
+          "count": {
+            "type": "boolean",
+            "description": "Có lấy tổng số bản ghi hay không"
+          }
+        }
+      },
+      "BaseRequestBody": {
+        "type": "object",
+        "properties": {
+          "start": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Lấy bản ghi từ trang",
+            "example": 0
+          },
+          "limit": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Số lượng bản ghi tối đa"
+          },
+          "keywords": {
+            "type": "string",
+            "description": "Từ khóa tìm kiếm"
+          }
+        }
+      },
+      "ApiGetPostRequest": {
+        "type": "object",
+        "properties": {
+          "start": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Lấy bản ghi từ trang",
+            "example": 0
+          },
+          "limit": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Số lượng bản ghi tối đa"
+          },
+          "keywords": {
+            "type": "string",
+            "description": "Từ khóa tìm kiếm"
+          },
+          "sortField": {
+            "type": "string",
+            "description": "Tên field để sắp xếp bản ghi khi lấy dữ liệu"
+          },
+          "sortType": {
+            "type": "string",
+            "description": "Loại sắp xếp ( ASC hoặc DESC)"
+          },
+          "state": {
+            "type": "string",
+            "enum": [
+              "DRAFT",
+              "ACTIVE",
+              "DELETED",
+              "INACTIVE"
+            ],
+            "description": "Trạng thái bài viết: 'DRAFT','ACTIVE','DELETED','INACTIVE'"
+          },
+          "categories": {
+            "type": "number",
+            "description": "Lọc theo một mảng các danh mục",
+            "example": [
+              1,
+              2
+            ]
+          },
+          "startDate": {
+            "type": "string",
+            "format": "date-time",
+            "example": "30/05/1978 02:34:56",
+            "description": "Ngày bắt đầu"
+          },
+          "endDate": {
+            "type": "string",
+            "format": "date-time",
+            "example": "30/05/1978 02:34:56",
+            "description": "Ngày kết thúc"
+          },
+          "stick": {
+            "type": "boolean",
+            "example": true
+          }
+        }
+      },
+      "ApiGetSurveyRequest": {
+        "type": "object",
+        "properties": {
+          "start": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Lấy bản ghi từ trang",
+            "example": 0
+          },
+          "limit": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Số lượng bản ghi tối đa"
+          },
+          "keywords": {
+            "type": "string",
+            "description": "Từ khóa tìm kiếm"
+          },
+          "sortField": {
+            "type": "string",
+            "description": "Tên field để sắp xếp bản ghi khi lấy dữ liệu"
+          },
+          "sortType": {
+            "type": "string",
+            "description": "Loại sắp xếp ( ASC hoặc DESC)"
+          },
+          "state": {
+            "type": "string",
+            "description": "Lọc theo trang thái ACTIVE, INACTIVE",
+            "example": "ACTIVE"
+          },
+          "startDate": {
+            "type": "string",
+            "format": "date-time",
+            "example": "30/05/1978 02:34:56",
+            "description": "Ngày bắt đầu"
+          },
+          "endDate": {
+            "type": "string",
+            "format": "date-time",
+            "example": "30/05/1978 02:34:56",
+            "description": "Ngày kết thúc"
+          }
+        }
+      },
+      "ApiGetSurveyQuestionRequest": {
+        "type": "object",
+        "properties": {
+          "surveysId": {
+            "type": "integer",
+            "example": 1
+          },
+          "question": {
+            "type": "string",
+            "example": "Bạn bao nhiêu tuổi?"
+          }
+        }
+      },
+      "ApiGetSurveyAnswerRequest": {
+        "type": "object",
+        "properties": {
+          "surveyQuestionId": {
+            "type": "integer",
+            "example": 1
+          }
+        }
+      },
+      "ApiGetSurveyResultRequest": {
+        "type": "object",
+        "properties": {
+          "surveyAnswerId": {
+            "type": "integer",
+            "example": 1
+          }
+        }
+      },
+      "BaseDataItemResponse": {
+        "type": "object",
+        "required": [
+          "success"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "data": {
+            "type": "object",
+            "additionalProperties": false
+          }
+        },
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/BaseDataItemResponseFailed"
+          }
+        ]
+      },
+      "BaseDataListResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "data": {
+            "type": "object",
+            "required": [
+              "total",
+              "items"
+            ],
+            "properties": {
+              "total": {
+                "type": "number"
+              },
+              "items": {
+                "type": "array",
+                "items": {
+                  "type": "object"
+                },
+                "maxItems": 100
+              }
+            }
+          }
+        },
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/BaseDataItemResponseFailed"
+          }
+        ]
+      },
+      "BaseDataItemResponseSuccess": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "default": true
+          },
+          "error": {
+            "type": "object",
+            "default": null
+          }
+        }
+      },
+      "BaseDataItemResponseFailed": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "error": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "message": {
+                "type": "string",
+                "example": "Error message"
+              },
+              "errors": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "example": "Error of field id"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Error detail message"
+                    },
+                    "code": {
+                      "type": "integer",
+                      "enum": [
+                        0,
+                        1,
+                        2,
+                        3,
+                        4,
+                        5,
+                        6,
+                        7,
+                        8,
+                        9,
+                        10,
+                        400,
+                        401,
+                        403,
+                        404,
+                        405,
+                        406,
+                        500,
+                        502,
+                        503,
+                        504,
+                        410,
+                        422
+                      ],
+                      "x-enumNames": [
+                        "ERR_OK",
+                        "ERR_SYSTEM",
+                        "ERR_VALIDATION",
+                        "ERR_OBJECT_NOT_FOUND",
+                        "ERR_ACCOUNT_LOCKED",
+                        "ERR_UNAUTHORIZED",
+                        "ERR_TOKEN_INVALID",
+                        "ERR_INTERNAL_SERVICE",
+                        "ERR_OTHER",
+                        "ERR_PARTNERID_INVALID",
+                        "ERR_PARTNER_APIKEY_INVALID",
+                        "ERR_BAD_REQUEST",
+                        "ERR_PERMISSION_INVALID",
+                        "ERR_ACCESS_FORBIDDEN",
+                        "ERR_REQUEST_NOT_FOUND",
+                        "ERR_METHOD_NOT_ALLOWED",
+                        "ERR_METHOD_FORMAT_NOT_VALID",
+                        "ERR_SERVER_ERROR",
+                        "ERR_GATEWAY_ERROR",
+                        "ERR_SERVER_UNAVAILABLE",
+                        "ERR_GATEWAY_TIMEOUT",
+                        "ERR_RESOUCES_DELETED",
+                        "ERR_VALIDATE_ERROR_OCCURED"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "GetDetailCategoryResponse": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/BaseDataItemResponse"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "data": {
+                "$ref": "#/components/schemas/Category"
+              }
+            }
+          }
+        ]
+      },
+      "DeleteCategoryRequest": {
+        "type": "object",
+        "properties": {
+          "ids": {
+            "type": "array",
+            "items": {
+              "type": "integer"
+            },
+            "example": [
+              1,
+              2,
+              3
+            ]
+          }
+        }
+      },
+      "GetListCategoryRequest": {
+        "type": "object",
+        "properties": {
+          "start": {
+            "type": "number",
+            "example": 0
+          },
+          "limit": {
+            "type": "number",
+            "example": 10
+          }
+        }
+      },
+      "GetListCategoryResponse": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/BaseDataListResponse"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "data": {
+                "type": "object",
+                "properties": {
+                  "total": {
+                    "type": "integer",
+                    "format": "int32",
+                    "description": "Tổng số bản ghi"
+                  },
+                  "items": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/Category"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        ]
+      },
+      "GetDetailPostResponse": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/BaseDataItemResponse"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "data": {
+                "$ref": "#/components/schemas/Post"
+              }
+            }
+          }
+        ]
+      },
+      "DeleteListId": {
+        "type": "integer",
+        "example": 1
+      },
+      "GetDetailPostPublicResponse": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/BaseDataItemResponse"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "data": {
+                "$ref": "#/components/schemas/PostDetailPublic"
+              }
+            }
+          }
+        ]
+      },
+      "GetListPostResponse": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/BaseDataListResponse"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "data": {
+                "type": "object",
+                "properties": {
+                  "total": {
+                    "type": "integer",
+                    "format": "int32",
+                    "description": "Tổng số bản ghi"
+                  },
+                  "items": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/PostList"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        ]
+      },
+      "GetDetailRecruitmentResponse": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/BaseDataListResponse"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "data": {
+                "$ref": "#/components/schemas/Recruitment"
+              }
+            }
+          }
+        ]
+      },
+      "GetListRecruitmentRequest": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/BaseRequestBody"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "industry": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "Ngành nghề"
+              },
+              "departments": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "Phòng ban"
+              },
+              "jobLocations": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "Danh sách nơi làm việc"
+              },
+              "userIds": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "Danh sách user id"
+              },
+              "publishUpDateFrom": {
+                "type": "integer",
+                "description": "Ngày đăng từ ngày",
+                "example": 1691503424000
+              },
+              "publishUpDateTo": {
+                "type": "integer",
+                "description": "Ngày đăng đến ngày",
+                "example": 1691503424000
+              },
+              "expiredDateFrom": {
+                "type": "integer",
+                "description": "Ngày hết hạn từ ngày",
+                "example": 1691503424000
+              },
+              "expiredDateTo": {
+                "type": "integer",
+                "description": "Ngày hết hạn đến ngày",
+                "example": 1691503424000
+              },
+              "states": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "enum": [
+                  "PENDING",
+                  "WATTING_APPROVED",
+                  "SEND_BACK",
+                  "REJECTED",
+                  "ACTIVE",
+                  "INACTIVE"
+                ]
+              },
+              "isExpired": {
+                "type": "boolean",
+                "description": "Lấy danh sách các thông tin tuyển dụng đã hết hạn/ chưa hết hạn"
+              }
+            }
+          }
+        ]
+      },
+      "GetListRecruitmentResponse": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/BaseDataItemResponse"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "data": {
+                "type": "object",
+                "properties": {
+                  "total": {
+                    "type": "integer",
+                    "format": "int32",
+                    "description": "Tổng số bản ghi"
+                  },
+                  "items": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/RecruitmentList"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        ]
+      },
+      "DeleteRecruitmentsResponse": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/BaseDataItemResponse"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "data": {
+                "type": "object",
+                "properties": {
+                  "total": {
+                    "type": "integer",
+                    "format": "int32",
+                    "description": "Tổng số bản ghi"
+                  },
+                  "items": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/RecruitmentDeleteData"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        ]
+      },
+      "GetRecruitmentsResponse": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/BaseDataItemResponse"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "data": {
+                "type": "object",
+                "properties": {
+                  "total": {
+                    "type": "integer",
+                    "format": "int32",
+                    "description": "Tổng số bản ghi"
+                  },
+                  "items": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/RecruitmentData"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        ]
+      },
+      "GetDetailRecruitmentTemplateResponse": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/BaseDataItemResponse"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "data": {
+                "$ref": "#/components/schemas/RecruitmentTemplate"
+              }
+            }
+          }
+        ]
+      },
+      "DeleteByIdsRequest": {
+        "required": [
+          "ids"
+        ],
+        "type": "object",
+        "properties": {
+          "ids": {
+            "type": "array",
+            "items": {
+              "type": "integer"
+            }
+          }
+        }
+      },
+      "DeleteRecruitmentTemplatesResponse": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/BaseDataItemResponse"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "data": {
+                "type": "object",
+                "properties": {
+                  "total": {
+                    "type": "integer",
+                    "format": "int32",
+                    "description": "Tổng số bản ghi"
+                  },
+                  "items": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/RecruitmentTemplateDeleteData"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        ]
+      },
+      "GetListRecruitmentTemplateResponse": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/BaseDataItemResponse"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "data": {
+                "type": "object",
+                "properties": {
+                  "total": {
+                    "type": "integer",
+                    "format": "int32",
+                    "description": "Tổng số bản ghi"
+                  },
+                  "items": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/RecruitmentTemplateList"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        ]
+      },
+      "GetDetailApplicantResponse": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/BaseDataItemResponse"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "data": {
+                "$ref": "#/components/schemas/Applicant"
+              }
+            }
+          }
+        ]
+      },
+      "GetListApplicantResponse": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/BaseDataListResponse"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "data": {
+                "type": "object",
+                "properties": {
+                  "total": {
+                    "type": "integer",
+                    "format": "int32",
+                    "description": "Tổng số bản ghi"
+                  },
+                  "items": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/Applicant"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        ],
+        "xml": {
+          "name": "##default"
+        }
+      },
+      "GetListMasterDataRequest": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Tên masterdata"
+          }
+        },
+        "required": [
+          "name"
+        ]
+      },
+      "MasterDataDef": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Tên mdm"
+          },
+          "description": {
+            "type": "string",
+            "description": "Mô tả"
+          },
+          "fileNameDefine": {
+            "type": "string",
+            "description": "Danh sách tên field"
+          }
+        }
+      },
+      "GetListMasterDataDefResponse": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/BaseDataListResponse"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "data": {
+                "type": "object",
+                "properties": {
+                  "total": {
+                    "type": "integer",
+                    "format": "int32",
+                    "description": "Tổng số bản ghi"
+                  },
+                  "items": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/MasterDataDef"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        ]
+      },
+      "BaseMasterData": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "id mdm"
+          },
+          "name": {
+            "type": "string",
+            "description": "Tên mdm"
+          },
+          "parentId": {
+            "type": "string",
+            "description": "mã id parent"
+          },
+          "parentType": {
+            "type": "string",
+            "description": "tên mdm parent"
+          }
+        }
+      },
+      "GetListBaseMasterDataResponse": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/BaseDataItemResponse"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "data": {
+                "type": "object",
+                "properties": {
+                  "total": {
+                    "type": "integer",
+                    "format": "int32",
+                    "description": "Tổng số bản ghi"
+                  },
+                  "items": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/BaseMasterData"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        ]
+      },
+      "Banners": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "id banner"
+          },
+          "name": {
+            "type": "string",
+            "description": "Tên banner"
+          },
+          "fileUrl": {
+            "type": "string",
+            "description": "Đường dẫn ảnh banner"
+          },
+          "targetUrl": {
+            "type": "string",
+            "description": "Đường dẫn bài viết khi click vào banner image"
+          },
+          "iconUrl": {
+            "type": "string",
+            "description": "Đường dẫn ảnh icon banner"
+          },
+          "createdTime": {
+            "type": "string",
+            "format": "date-time",
+            "example": "30/05/1978 02:34:56"
+          },
+          "modifiedTime": {
+            "type": "string",
+            "format": "date-time",
+            "example": "30/05/1978 02:34:56"
+          },
+          "createdBy": {
+            "type": "string",
+            "description": "Người tạo"
+          },
+          "modifiedBy": {
+            "type": "string",
+            "description": "Người thay đổi"
+          },
+          "public": {
+            "type": "boolean",
+            "example": true
+          },
+          "ordering": {
+            "type": "integer",
+            "description": "Thứ tự sắp xếp banner hiển thị trên trang chủ"
+          },
+          "mimeType": {
+            "type": "string",
+            "description": "Định dạng file"
+          },
+          "duration": {
+            "type": "number",
+            "description": "Thời gian hiển thị banner"
+          },
+          "content": {
+            "type": "string",
+            "description": "Nội dung banner"
+          }
+        }
+      },
+      "CreateBannerRequest": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Tên banner",
+            "example": "banner"
+          },
+          "fileUrl": {
+            "type": "string",
+            "description": "Đường dẫn ảnh banner",
+            "example": "https://www.riotgames.com/darkroom/1200/6a7e2f26eaff2702dff1f1ac22e39980:46c225b597b09ea04b013847103fe1e9/221012-ccc-gaming2-0-kv-landscape-cmyk-preview.png"
+          },
+          "targetUrl": {
+            "type": "string",
+            "description": "Đường dẫn bài viết khi click vào banner image",
+            "example": "https://www.riotgames.com/darkroom/1200/6a7e2f26eaff2702dff1f1ac22e39980:46c225b597b09ea04b013847103fe1e9/221012-ccc-gaming2-0-kv-landscape-cmyk-preview.png"
+          },
+          "iconUrl": {
+            "type": "string",
+            "description": "Đường dẫn bài viết khi click vào banner image",
+            "example": "https://www.riotgames.com/darkroom/1200/6a7e2f26eaff2702dff1f1ac22e39980:46c225b597b09ea04b013847103fe1e9/221012-ccc-gaming2-0-kv-landscape-cmyk-preview.png"
+          },
+          "mimeType": {
+            "type": "string",
+            "description": "Định dạng banner",
+            "example": "IMAGE"
+          },
+          "duration": {
+            "type": "number",
+            "description": "Thời gian hiển thị banner"
+          },
+          "content": {
+            "type": "string",
+            "description": "Nội dung banner"
+          }
+        }
+      },
+      "CreateBannerResponse": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/BaseDataItemResponse"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "data": {
+                "type": "object",
+                "$ref": "#/components/schemas/Banners"
+              }
+            }
+          }
+        ]
+      },
+      "UpdateBannerRequest": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "example": 1
+          },
+          "name": {
+            "type": "string",
+            "description": "Tên banner",
+            "example": "banner update"
+          },
+          "fileUrl": {
+            "type": "string",
+            "description": "Đường dẫn ảnh banner",
+            "example": "https://www.riotgames.com/darkroom/1200/6a7e2f26eaff2702dff1f1ac22e39980:46c225b597b09ea04b013847103fe1e9/221012-ccc-gaming2-0-kv-landscape-cmyk-preview.png"
+          },
+          "targetUrl": {
+            "type": "string",
+            "description": "Đường dẫn bài viết khi click vào banner image",
+            "example": "https://www.riotgames.com/darkroom/1200/6a7e2f26eaff2702dff1f1ac22e39980:46c225b597b09ea04b013847103fe1e9/221012-ccc-gaming2-0-kv-landscape-cmyk-preview.png"
+          },
+          "iconUrl": {
+            "type": "string",
+            "description": "Đường dẫn bài viết khi click vào banner image",
+            "example": "https://www.riotgames.com/darkroom/1200/6a7e2f26eaff2702dff1f1ac22e39980:46c225b597b09ea04b013847103fe1e9/221012-ccc-gaming2-0-kv-landscape-cmyk-preview.png"
+          },
+          "publicBanner": {
+            "type": "boolean",
+            "example": false
+          },
+          "mimeType": {
+            "type": "string",
+            "description": "Định dạng banner",
+            "example": "IMAGE"
+          },
+          "duration": {
+            "type": "number",
+            "description": "Thời gian hiển thị banner"
+          },
+          "content": {
+            "type": "string",
+            "description": "Nội dung banner"
+          }
+        }
+      },
+      "UpdateBannerResponse": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/BaseDataItemResponse"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "data": {
+                "type": "object",
+                "$ref": "#/components/schemas/Banners"
+              }
+            }
+          }
+        ]
+      },
+      "DeleteBannerRequest": {
+        "type": "object",
+        "properties": {
+          "ids": {
+            "type": "array",
+            "items": {
+              "type": "integer"
+            },
+            "example": [
+              1,
+              2,
+              3
+            ]
+          }
+        }
+      },
+      "DeleteBannerResponse": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/BaseDataItemResponse"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "data": {
+                "type": "object"
+              }
+            }
+          }
+        ]
+      },
+      "GetBannerByIdResponse": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/BaseDataItemResponse"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "data": {
+                "type": "object",
+                "$ref": "#/components/schemas/Banners"
+              }
+            }
+          }
+        ]
+      },
+      "GetListBannerResponse": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/BaseDataListResponse"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "data": {
+                "type": "object",
+                "properties": {
+                  "total": {
+                    "type": "integer",
+                    "format": "int32",
+                    "description": "Tổng số bản ghi"
+                  },
+                  "items": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/Banners"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        ]
+      },
+      "RearrangePositionBannerRequest": {
+        "type": "object",
+        "properties": {
+          "ids": {
+            "type": "array",
+            "items": {
+              "type": "integer"
+            }
+          }
+        }
+      },
+      "RearrangePositionBannerReponse": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/BaseDataItemResponse"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "data": {
+                "type": "string",
+                "example": "Sắp xếp lại vị trí thành công!"
+              }
+            }
+          }
+        ]
+      },
+      "FileUpload": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "id file"
+          },
+          "fileName": {
+            "type": "string",
+            "description": "Tên file"
+          },
+          "url": {
+            "type": "string",
+            "description": "url của file"
+          },
+          "mime": {
+            "type": "string",
+            "description": "Loại file"
+          },
+          "fileSize": {
+            "type": "integer",
+            "format": "int32",
+            "description": "size file"
+          },
+          "icon": {
+            "type": "string",
+            "description": "url ảnh thumb"
+          },
+          "iconId": {
+            "type": "integer",
+            "format": "int32",
+            "description": "id của ảnh thumb icon"
+          }
+        }
+      },
+      "GetMediaFilesResponse": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/BaseDataListResponse"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "data": {
+                "type": "object",
+                "properties": {
+                  "total": {
+                    "type": "integer",
+                    "format": "int32",
+                    "description": "Tổng số bản ghi"
+                  },
+                  "items": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/FileUpload"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        ]
+      },
+      "DeleteMediaFileRequest": {
+        "type": "object",
+        "properties": {
+          "ids": {
+            "type": "array",
+            "items": {
+              "type": "integer"
+            }
+          }
+        }
+      },
+      "DeleteMediaFileDetail": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "Mã media file"
+          },
+          "fileName": {
+            "type": "string",
+            "description": "File name"
+          }
+        }
+      },
+      "DeleteMediaFileResponse": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/BaseDataListResponse"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "data": {
+                "type": "object",
+                "properties": {
+                  "total": {
+                    "type": "integer",
+                    "format": "int32",
+                    "description": "Tổng số bản ghi"
+                  },
+                  "items": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/DeleteMediaFileDetail"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        ]
+      },
+      "UpdateStateRecruitmentRequest": {
+        "type": "object",
+        "properties": {
+          "ids": {
+            "type": "array",
+            "items": {
+              "type": "integer"
+            }
+          },
+          "state": {
+            "type": "string",
+            "enum": [
+              "PENDING",
+              "WATTING_APPROVED",
+              "SEND_BACK",
+              "REJECTED",
+              "ACTIVE",
+              "INACTIVE"
+            ]
+          }
+        }
+      },
+      "UpdateStateRecruitmentResponse": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/BaseDataItemResponse"
+          }
+        ]
+      }
+    },
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  }
+}

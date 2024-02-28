@@ -1,0 +1,46 @@
+{
+    "code": "CODE_DEV_NET",
+    "jobTitle": "Dev Net Junior",
+    "description": "Tham gia trực tiếp vào dự án đang phát triển tại công ty",
+    "experienceRequirementDescriptions": "01 năm kinh nghiệm",
+    "industry": [
+        "1",
+        "3",
+        "4"
+    ],
+    "salaryType": "1",
+    "salaryCurrency": "1",
+    "salaryMinValue": 10000000,
+    "salaryMaxValue": 50000000,
+    "employmentTypes": [
+        "1"
+    ],
+    "validThrough": "1723432414000",
+    "jobBenefits": [
+        "1",
+        "2",
+        "3",
+        "4"
+    ],
+    "ageFrom": 18,
+    "ageTo": 40,
+    "monthsOfExperienceFrom": 12,
+    "monthsOfExperienceTo": 240,
+    "experienceRequirementsType": "1",
+    "occupationalCategory": "2",
+    "qualifications": [
+        "2",
+        "1"
+    ],
+    "skills": "string",
+    "note": "Thông tin khác Độ tuổi: Không giới hạn tuổi",
+    "reasonJobPostings": "Test thông tin việc làm mẫu",
+    "jobLocations": [
+        "1",
+        "2"
+    ],
+    "departments": [
+        "1",
+        "2"
+    ]
+}

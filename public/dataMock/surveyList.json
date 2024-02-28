@@ -1,0 +1,34 @@
+[
+    {
+        "id": 1,
+        "title": "Lý do bạn ghé thăm website tuyển dụng SeaBank?",
+        "description": "yessss",
+        "state": 1,
+        "createdTime": "20/2/2023",
+        "option": 1
+    },
+    {
+        "id": 2,
+        "title": "Lý do bạn ghé thăm website tuyển dụng SeaBank?",
+        "description": "yessss",
+        "state": 0,
+        "createdTime": "20/2/2023",
+        "option": 1
+    },
+    {
+        "id": 3,
+        "title": "Lý do bạn ghé thăm website tuyển dụng SeaBank?",
+        "description": "nossss",
+        "state": 1,
+        "createdTime": "20/2/2023",
+        "option": 1
+    },
+    {
+        "id": 4,
+        "title": "Lý do bạn ghé thăm website tuyển dụng SeaBank?",
+        "description": "noss",
+        "state": 1,
+        "createdTime": "20/2/2023",
+        "option": 1
+    }
+]

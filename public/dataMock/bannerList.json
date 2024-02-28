@@ -1,0 +1,74 @@
+[
+  {
+    "id": 0,
+    "name": "Banner1",
+    "content": "Giới thiệu việc làm",
+    "imageUrl": "https://cdn.tgdd.vn/Files/2017/02/16/950437/anhthunho1_800x450.jpg",
+    "state": true,
+    "targetUrl": "https://confluence.gogroup.vn/pages/viewpage.action?pageId=141426881"
+  },
+  {
+    "id": 1,
+    "name": "Banner2",
+    "content": "Giới thiệu việc làm",
+    "imageUrl": "https://cdn.tgdd.vn/Files/2017/02/16/950437/anhthunho1_800x450.jpg",
+    "state": true,
+    "targetUrl": "https://confluence.gogroup.vn/pages/viewpage.action?pageId=141426881"
+  },
+  {
+    "id": 2,
+    "name": "Banner3",
+    "content": "Giới thiệu việc làm",
+    "imageUrl": "https://cdn.tgdd.vn/Files/2017/02/16/950437/anhthunho1_800x450.jpg",
+    "state": false,
+    "targetUrl": "https://confluence.gogroup.vn/pages/viewpage.action?pageId=141426881"
+  },
+  {
+    "id": 3,
+    "name": "Banner4",
+    "content": "Giới thiệu việc làm",
+    "imageUrl": "https://cdn.tgdd.vn/Files/2017/02/16/950437/anhthunho1_800x450.jpg",
+    "state": false,
+    "targetUrl": "https://confluence.gogroup.vn/pages/viewpage.action?pageId=141426881"
+  },
+  {
+    "id": 4,
+    "name": "Banner5",
+    "content": "Giới thiệu việc làm",
+    "imageUrl": "https://cdn.tgdd.vn/Files/2017/02/16/950437/anhthunho1_800x450.jpg",
+    "state": false,
+    "targetUrl": "https://confluence.gogroup.vn/pages/viewpage.action?pageId=141426881"
+  },
+  {
+    "id": 5,
+    "name": "Banner6",
+    "content": "Giới thiệu việc làm",
+    "imageUrl": "https://cdn.tgdd.vn/Files/2017/02/16/950437/anhthunho1_800x450.jpg",
+    "state": false,
+    "targetUrl": "https://confluence.gogroup.vn/pages/viewpage.action?pageId=141426881"
+  },
+  {
+    "id": 6,
+    "name": "Banner7",
+    "content": "Giới thiệu việc làm",
+    "imageUrl": "https://cdn.tgdd.vn/Files/2017/02/16/950437/anhthunho1_800x450.jpg",
+    "state": false,
+    "targetUrl": "https://confluence.gogroup.vn/pages/viewpage.action?pageId=141426881"
+  },
+  {
+    "id": 7,
+    "name": "Banner8",
+    "content": "Giới thiệu việc làm",
+    "imageUrl": "https://cdn.tgdd.vn/Files/2017/02/16/950437/anhthunho1_800x450.jpg",
+    "state": false,
+    "targetUrl": "https://confluence.gogroup.vn/pages/viewpage.action?pageId=141426881"
+  },
+  {
+    "id": 8,
+    "name": "Banner9",
+    "content": "Giới thiệu việc làm",
+    "imageUrl": "https://cdn.tgdd.vn/Files/2017/02/16/950437/anhthunho1_800x450.jpg",
+    "state": false,
+    "targetUrl": "https://confluence.gogroup.vn/pages/viewpage.action?pageId=141426881"
+  }
+]

@@ -1,0 +1,3125 @@
+openapi: 3.0.3
+info:
+  title: Open SB Career Website Admin API
+  description: >-
+    <b>Quy trình các bước thực hiện sinh token để sử dụng Opent API:</b><br>Bước
+    1: Sinh token bằng api Login và sao chép kết quả token đoạn mã api trả ra<br>Bước 2: Xác thực
+    Authorize bằng mã token đã sao chép bằng nút Authorize<br>Bước 3: Thực hiện
+    gọi các api
+    <br>----------------------------------------------------------------------
+  version: 1.0.1
+servers:
+  - url: https://{url}/{version}
+    # description: The depvelop API server
+    variables:
+      url:
+        enum:
+          - "sb-career-gw.onbank.vn"
+          - "sb-career-uat-gw.seabank.com.vn"
+        default: "sb-career-gw.onbank.vn"
+        description: API Server
+      version:
+        enum:
+          - v1
+          - v2
+        default: v1
+        description: Phiên bản API
+tags:
+  - name: auth
+    description: Đăng nhập
+  - name: masterdata
+    description: Quản lý các master data trong hệ thống như thông tin sdt website, facebook, twitter, các loại data picked list
+  - name: categories
+    description: Quản lý danh mục bài viết trên website
+  - name: posts
+    description: Quản lý các bài viết, tin tức trên website
+  - name: users
+    description: Quản lý danh sách user trên hệ thống
+  - name: surveys
+    description: Quản lý các bài khảo sát
+  - name: surveys-question
+    description: Quản lý các câu hỏi khảo sát
+  - name: surveys-answer
+    description: Quản lý các đáp án câu hỏi khảo sát
+  - name: surveys-result
+    description: Quản lý các kết quả của đáp án câu hỏi khảo sát
+  - name: recruitments
+    description: Quản lý thông tin tuyển dụng
+  - name: recruitment-templates
+    description: Quản lý thông tin template hồ sơ ứng tuyển
+  - name: applicants
+    description: Quản lý hồ sơ ứng viên, phân quyền hồ sơ ứng viên
+  - name: upload
+    description: Upload file, ảnh lên hệ thống
+  - name: gallery
+    description: Quản lý các tệp file ảnh đã tải lên
+
+paths:
+  #master data
+  /admin/cms/masterdata/mdmdefs:
+    get:
+      tags:
+        - masterdata
+      summary: Lấy danh sách các bảng mdm trên hệ thống
+      security:
+        - bearerAuth: []
+      responses:
+        default:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GetListMasterDataDefResponse"
+
+  /admin/cms/masterdata/getList:
+    post:
+      tags:
+        - masterdata
+      summary: Lấy thông tin chi tiết của 1 mdm
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/GetListMasterDataRequest"
+      responses:
+        default:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GetListBaseMasterDataResponse"
+
+  /admin/cms/masterdata/social:
+    post:
+      tags:
+        - masterdata
+      summary: Tạo thông tin mạng xã hội
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        description: Tạo thông tin mạng xã hội
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateSocialInfoRequest"
+      responses:
+        default:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
+    put:
+      tags:
+        - masterdata
+      summary: Cập nhật thông tin mạng xã hội
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        description: Cập nhật thông tin mạng xã hội
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateSocialInfoRequest"
+      responses:
+        default:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
+
+    delete:
+      tags:
+        - masterdata
+      summary: Xóa thông tin mạng xã hội
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        description: Xóa thông tin mạng xã hội
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DeleteSocialInfoRequest"
+      responses:
+        default:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
+    get:
+      tags:
+        - masterdata
+      summary: Lấy danh sách thông tin mạng xã hội
+      security:
+        - bearerAuth: []
+      responses:
+        default:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GetListSocialInfoResponse"
+
+  #upload file cho cms
+  /admin/upload/cms:
+    post:
+      tags:
+        - upload
+      summary: Upload file ảnh để biên tập bài viết
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        description: Upload file ảnh để biên tập bài viết
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+      responses:
+        default:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UploadFileResponse"
+  /admin/image-galleries:
+    get:
+      tags:
+        - gallery
+      summary: Lấy danh sách các bảng mdm trên hệ thống
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: query
+          name: start
+          schema:
+            type: integer  
+        - in: query            
+          name: limit
+          schema:
+            type: integer            
+      responses:
+        default:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GetListImageGalleryDataResponse"
+                
+  #quan ly category
+  /admin/cms/categories:
+    post:
+      tags:
+        - categories
+      summary: Tạo danh mục bài viết
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        description: Tạo danh mục bài viết
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CategoryRequestBody"
+      responses:
+        default:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
+    put:
+      tags:
+        - categories
+      summary: Cập nhật danh mục bài viết
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        description: Cập nhật danh mục bài viết
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CategoryRequestUpdateBody"
+
+      responses:
+        default:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
+
+    delete:
+      tags:
+        - categories
+      summary: "Xóa danh mục bài viết"
+      security:
+        - bearerAuth: []
+      description: Xóa danh mục bài viết theo id
+      operationId: deleteCategory
+      parameters:
+        - in: query
+          name: categoryId
+          schema:
+            type: integer
+      responses:
+        default:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
+    get:
+      tags:
+        - categories
+      summary: "Lấy thông tin chi tiết 1 danh mục bài viết"
+      security:
+        - bearerAuth: []
+      description: Lấy thông tin danh mục bài viết theo id
+      operationId: getDetailCategory
+      parameters:
+        - in: query
+          name: categoryId
+          schema:
+            type: integer
+      responses:
+        default:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GetDetailCategoryResponse"
+  /admin/cms/categories/getList:
+    post:
+      tags:
+        - categories
+      summary: Lấy danh sách danh mục
+      security:
+        - bearerAuth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ApiBaseRequestBody"
+      responses:
+        default:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GetListCategoryResponse"
+
+  #quan ly post
+  /admin/cms/posts:
+    post:
+      tags:
+        - posts
+      summary: Tạo bài viết
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        description: Tạo bài viết
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PostRequestBody"
+      responses:
+        default:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
+    put:
+      tags:
+        - posts
+      summary: Cập nhật bài viết
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        description: Cập nhật bài viết
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PostRequestUpdateBody"
+      responses:
+        default:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
+    patch:
+      tags:
+        - posts
+      summary: "Xóa một bài viết"
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        description: Lấy id của các bài viết cần xóa
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RequestDeleteBody"
+      responses:
+        default:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
+  /admin/cms/posts/{id}:
+    get:
+      tags:
+        - posts
+      summary: "Lấy thông tin chi tiết 1 bài viết"
+      security:
+        - bearerAuth: []
+      description: Lấy thông tin chi tiết bài viết theo id
+      operationId: getDetailPost
+      parameters:      
+        - name: id
+          in: path  
+          required: true        
+          schema:
+            type: integer
+      responses:
+        default:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GetDetailPostResponse"
+  /admin/cms/posts/deleteCompletely:
+    delete:
+      tags:
+        - posts
+      summary: "Xóa hẳn một hoặc nhiều bài viết"
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        description: Lấy id của các bài viết cần xóa
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RequestDeleteBody"
+      responses:
+        default:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
+  /admin/cms/posts/getList:
+    post:
+      tags:
+        - posts
+      summary: Lấy danh sách bài viết
+      security:
+        - bearerAuth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ApiGetPostRequest"
+      responses:
+        default:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GetListPostResponse"
+
+  /admin/cms/posts/getListV2:
+    post:
+      tags:
+        - posts
+      summary: Lấy danh sách bài viết (theo request field cố định)
+      security:
+        - bearerAuth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ApiGetPostRequest"
+      responses:
+        default:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GetListPostResponse"
+
+  #quan ly mau tuyen dung
+  /admin/recruitment-templates:
+    post:
+      tags:
+        - recruitment-templates
+      summary: Tạo mẫu thông tin tuyển dụng
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        description: Tạo mẫu thông tin tuyển dụng
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RecruitmentTemplateRequestBody"
+      responses:
+        default:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
+    put:
+      tags:
+        - recruitment-templates
+      summary: Cập nhật mẫu thông tin tuyển dụng
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        description: Cập nhật mẫu thông tin tuyển dụng
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RecruitmentTemplateRequestUpdateBody"
+      responses:
+        default:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
+
+    delete:
+      tags:
+        - recruitment-templates
+      summary: "Xóa mẫu thông tin tuyển dụng"
+      security:
+        - bearerAuth: []
+      description: Xóa mẫu thông tin tuyển dụng theo id
+      operationId: deleteRecruitmentTemplate
+      parameters:
+        - in: query
+          name: recruitmentTemplateId
+          schema:
+            type: integer
+      responses:
+        default:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
+    get:
+      tags:
+        - recruitment-templates
+      summary: "Lấy thông tin chi tiết thông tin tuyển dụng"
+      security:
+        - bearerAuth: []
+      description: Lấy thông tin mẫu tuyển dụng theo id
+      operationId: getDetailRecruitmentTemplate
+      parameters:
+        - in: query
+          name: recruitmentTemplateId
+          schema:
+            type: integer
+      responses:
+        default:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GetDetailRecruitmentTemplateResponse"
+  /admin/recruitment-templates/getList:
+    post:
+      tags:
+        - recruitment-templates
+      summary: Lấy danh sách mẫu thông tin tuyển dụng
+      security:
+        - bearerAuth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ApiBaseRequestBody"
+      responses:
+        default:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GetListRecruitmentTemplateResponse"
+  #quan ly cau hoi khao sat
+  /admin/cms/surveys:
+    post:
+      tags:
+        - surveys
+      summary: Tạo khảo sát
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        description: Tạo khảo sát
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SurveyRequestBody"
+      responses:
+        default:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
+    put:
+      tags:
+        - surveys
+      summary: Cập nhật khảo sát
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        description: Cập nhật khảo sát
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SurveyRequestUpdateBody"
+
+      responses:
+        default:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
+
+    delete:
+      tags:
+        - surveys
+      summary: "Xóa khảo sát"
+      security:
+        - bearerAuth: []
+      description: Xóa khảo sát theo id
+      operationId: deleteSurvey
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RequestDeleteBody"
+      responses:
+        default:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
+  /admin/cms/surveys/{id}:             
+    get:
+      tags:
+        - surveys
+      summary: "Lấy thông tin chi tiết khảo sát"
+      security:
+        - bearerAuth: []
+      description: Lấy thông tin chi tiết khảo sát theo id
+      operationId: getDetailSurvey
+      parameters:
+        - name: id
+          in: path
+          required: true          
+          schema:
+            type: integer
+      responses:
+        default:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GetDetailSurveyResponse"
+  /admin/cms/surveys/getList:
+    post:
+      tags:
+        - surveys
+      summary: Lấy danh sách khảo sát
+      security:
+        - bearerAuth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ApiGetSurveyRequest"
+      responses:
+        default:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GetListSurveyResponse"
+# Quan ly cau hoi khao sat
+  /admin/cms/surveyQuestions:
+    post:
+      tags:
+        - surveys-question
+      summary: Tạo câu hỏi khảo sát
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        description: Tạo câu hỏi khảo sát
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateSurveyQuestionRequest"
+      responses:
+        default:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
+    put:
+      tags:
+        - surveys-question
+      summary: Chỉnh sửa câu hỏi khảo sát
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        description: Chỉnh sửa câu hỏi khảo sát
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateSurveyQuestionRequest"
+      responses:
+        default:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
+    delete:
+      tags:
+        - surveys-question
+      summary: "Xóa câu hỏi khảo sát"
+      security:
+        - bearerAuth: []
+      description: Xóa câu hỏi khảo sát theo id
+      operationId: deleteSurvey
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RequestDeleteBody"
+      responses:
+        default:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
+  /admin/cms/surveyQuestions/{id}:
+    get:
+      tags:
+        - surveys-question
+      summary: "Lấy thông tin chi tiết câu hỏi khảo sát"
+      security:
+        - bearerAuth: []
+      description: Lấy thông tin chi tiết câu hỏi khảo sát theo id
+      operationId: getDetailSurveyQuestion
+      parameters:
+        - name: id
+          in: path      
+          required: true    
+          schema:
+            type: integer
+      responses:
+        default:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GetDetailSurveyQuestionResponse"
+  /admin/cms/surveyQuestions/getList:
+    post:
+      tags:
+        - surveys-question
+      summary: Lấy danh sách câu hỏi khảo sát
+      security:
+        - bearerAuth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ApiGetSurveyQuestionRequest"
+      responses:
+        default:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GetDetailSurveyQuestionResponse"
+  # Quan ly dap an cau hoi khao sat
+  /admin/cms/surveyAnswers:
+    post:
+      tags:
+        - surveys-answer
+      summary: Tạo đáp án câu hỏi khảo sát
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        description: Tạo đáp án câu hỏi khảo sát
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateSurveyAnswerRequest"
+      responses:
+        default:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
+    put:
+      tags:
+        - surveys-answer
+      summary: Chỉnh sửa đáp án câu hỏi khảo sát
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        description: Chỉnh sửa đáp án câu hỏi khảo sát
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateSurveyAnswerRequest"
+      responses:
+        default:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
+    delete:
+      tags:
+        - surveys-answer
+      summary: "Xóa đáp án khảo sát"
+      security:
+        - bearerAuth: []
+      description: Xóa đáp án khảo sát theo id
+      operationId: deleteSurvey
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RequestDeleteBody"
+      responses:
+        default:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
+  /admin/cms/surveyAnswers/{id}:
+    get:
+      tags:
+        - surveys-answer
+      summary: "Lấy thông tin chi tiết đáp án câu hỏi khảo sát"
+      security:
+        - bearerAuth: []
+      description: Lấy thông tin chi tiết đáp án câu hỏi khảo sát theo id
+      operationId: getDetailSurveyAnswer
+      parameters:
+        - name: id
+          in: path  
+          required: true        
+          schema:
+            type: integer
+      responses:
+        default:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GetDetailSurveyAnswerResponse"
+  /admin/cms/surveyAnswers/getList:
+    post:
+      tags:
+        - surveys-answer
+      summary: Lấy danh sách đáp án câu hỏi khảo sát
+      security:
+        - bearerAuth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ApiGetSurveyQuestionRequest"
+      responses:
+        default:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GetDetailSurveyAnswerResponse"
+  # Quan ly dap an cau hoi khao sat
+  /admin/cms/surveyResults:
+    post:
+      tags:
+        - surveys-result
+      summary: Hiển thị danh sách kết quả của các đáp án
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        description: Điều kiện lọc
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ApiGetSurveyResultRequest"
+      responses:
+        default:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GetDetailSurveyResultResponse"    
+  # Quan ly thong tin tuyen dung
+  /admin/recruitments:
+    post:
+      tags:
+        - recruitments
+      summary: Tạo thông tin tuyển dụng
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        description: Tạo thông tin tuyển dụng
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RecruitmentRequestBody"
+      responses:
+        default:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
+    put:
+      tags:
+        - recruitments
+      summary: Cập nhật thông tin tuyển dụng
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        description: Cập nhật thông tin tuyển dụng
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RecruitmentRequestUpdateBody"
+      responses:
+        default:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
+
+    delete:
+      tags:
+        - recruitments
+      summary: "Xóa thông tin tuyển dụng"
+      security:
+        - bearerAuth: []
+      description: Xóa thông tin tuyển dụng theo id
+      operationId: deleteRecruitment
+      parameters:
+        - in: query
+          name: recruitmentId
+          schema:
+            type: integer
+      responses:
+        default:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
+    get:
+      tags:
+        - recruitments
+      summary: "Lấy thông tin chi tiết thông tin tuyển dụng"
+      security:
+        - bearerAuth: []
+      description: Lấy thông tin tuyển dụng theo id
+      operationId: getDetailRecruitment
+      parameters:
+        - in: query
+          name: recruitmentId
+          schema:
+            type: integer
+      responses:
+        default:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GetDetailRecruitmentResponse"
+  /admin/recruitments/getList:
+    post:
+      tags:
+        - recruitments
+      summary: Lấy danh sách thông tin tuyển dụng
+      security:
+        - bearerAuth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ApiBaseRequestBody"
+      responses:
+        default:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GetListRecruitmentResponse"
+  # quan ly ho so ung tuyen
+  /admin/applicants:
+    post:
+      tags:
+        - applicants
+      summary: Tạo thông tin hồ sơ ứng tuyển
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        description: Tạo thông tin hồ sơ ứng tuyển
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ApplicantRequestBody"
+      responses:
+        default:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
+    put:
+      tags:
+        - applicants
+      summary: Cập nhật thông tin hồ sơ ứng tuyển
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        description: Cập nhật thông tin hồ sơ ứng tuyển
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ApplicantRequestUpdateBody"
+      responses:
+        default:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
+
+    delete:
+      tags:
+        - applicants
+      summary: "Xóa thông tin hồ sơ ứng tuyển"
+      security:
+        - bearerAuth: []
+      description: Xóa thông tin hồ sơ ứng tuyển theo id
+      operationId: deleteApplicant
+      parameters:
+        - in: query
+          name: applicantId
+          schema:
+            type: integer
+      responses:
+        default:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
+    get:
+      tags:
+        - applicants
+      summary: "Lấy thông tin chi tiết thông tin hồ sơ ứng tuyển"
+      security:
+        - bearerAuth: []
+      description: Lấy thông tin hồ sơ ứng tuyển theo id
+      operationId: getDetailApplicant
+      parameters:
+        - in: query
+          name: applicantId
+          schema:
+            type: integer
+      responses:
+        default:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GetDetailApplicantResponse"
+  /admin/applicants/getList:
+    post:
+      tags:
+        - applicants
+      summary: Lấy danh sách hồ sơ ứng tuyển
+      security:
+        - bearerAuth: []
+      operationId: getListApplicant
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ApiBaseRequestBody"
+      responses:
+        default:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GetListApplicantResponse"
+
+  #authen api
+  /admin/auth/login:
+    post:
+      tags:
+        - auth
+      summary: đăng nhập hệ thống
+      operationId: login
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LoginRequest"
+      responses:
+        default:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LoginResponseSuccess"
+  /admin/auth/refreshtoken:
+    post:
+      tags:
+        - auth
+      summary: nếu thực hiện các api response error code = 6 thì dùng api này để lấy access token mới
+      operationId: refreshToken
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RefreshTokenRequest"
+      responses:
+        default:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RefreshTokenResponseSuccess"
+
+components:
+  schemas:
+    #dang nhap
+    RefreshTokenRequest:
+      type: object
+      properties:
+        refreshToken:
+          type: string
+          description: refreshToken
+          example: 207ca6db-1ed7-4f5b-8e6d-00021c99fe6c
+
+    RefreshTokenResponseSuccess:
+      type: object
+      properties:
+        success:
+          type: boolean
+          default: true
+        data:
+          type: object
+          properties:
+            accessToken:
+              type: string
+              description: token user
+            userId:
+              type: string
+              description: userId của người dùng
+            refreshToken:
+              type: string
+              description: Refresh token
+            tokenType:
+              type: string
+
+    LoginRequest:
+      type: object
+      properties:
+        username:
+          type: string
+          description: Tên đăng nhập
+          example: admin1
+        password:
+          type: string
+          description: Mật khẩu
+          example: 123123
+
+    LoginResponseSuccess:
+      type: object
+      properties:
+        success:
+          type: boolean
+          default: true
+        data:
+          type: object
+          properties:
+            accessToken:
+              type: string
+              description: token user
+            userId:
+              type: string
+              description: userId của người dùng
+            refreshToken:
+              type: string
+              description: Refresh token
+            tokenType:
+              type: string
+            expires:
+              type: integer
+              format: int64
+
+    # danh mục
+    Category:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+          example: 1
+        title:
+          type: string
+          example: "Tin tức"
+        parentId:
+          type: integer
+          format: int32
+          example: 1
+        path:
+          type: string
+          example: ""
+        description:
+          type: string
+          example: "Mô tả danh mục"
+        createdTime:
+          type: string
+          format: date-time
+          example: "30/05/1978 02:34:56"
+        modifiedTime:
+          type: string
+          format: date-time
+          example: "30/05/1978 02:34:56"
+        createdBy:
+          type: string
+          example: "user1"
+        modifiedBy:
+          type: string
+          example: "user1"
+        youtubeLink:
+          type: string
+        youtubeEmbed:
+          type: string
+      xml:
+        name: category
+    CategoryRequestBody:
+      type: object
+      properties:
+        title:
+          type: string
+          example: "Tin tức"
+        parentId:
+          type: integer
+          format: int32
+          example: 1
+        path:
+          type: string
+          example: ""
+        description:
+          type: string
+          example: "Mô tả danh mục"
+        youtubeLink:
+          type: string
+        youtubeEmbed:
+          type: string
+      required:
+        - title
+        - description
+      xml:
+        name: categoryRequestBody
+    CategoryRequestUpdateBody:
+      allOf:
+        - $ref: "#/components/schemas/CategoryRequestBody" #
+        - type: object
+          properties: # extra properties only for cats
+            id:
+              type: integer
+              description: Mã danh mục
+      required:
+        - title
+        - description
+        - id
+    # Bài viết
+    Post:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+          example: 1
+        title:
+          type: string
+          example: "Bài viết 1"
+        alias:
+          type: string
+          example: "bai-viet-1"
+        description:
+          type: string
+          example: "Mô tả bài viết"
+        content:
+          type: string
+          example: "Nội dung bài viết"
+        state:
+          type: string
+          example: ACTIVE
+          description: "Trạng thái bài viết: 'DRAFT','ACTIVE','DELETED'"
+        createdTime:
+          type: string
+          format: date-time
+          example: "30-05-1978 02:34:56"
+        modifiedTime:
+          type: string
+          format: date-time
+          example: "30-05-1978 02:34:56"
+        createdBy:
+          type: string
+          example: "user1"
+        modifiedBy:
+          type: string
+          example: "user1"
+        ordering:
+          type: integer
+          format: int32
+          example: 1
+        stick:
+          type: boolean
+          example: false
+        categoriesId:
+          type: array
+          items:
+            type: integer
+          example: [1, 2, 3]
+        publishUp:
+          type: string
+          format: date-time
+          example: "30-05-1978 02:34:56"
+        thumbImage:
+          type: string
+          example: "https://cdn.tgdd.vn/Files/2017/02/16/950437/anhthunho1_800x450.jpg"
+        publishTime:
+          type: string
+          format: date-time
+          example: "30-05-1978 02:34:56"
+        postTags:
+          type: array
+          items:
+            type: string
+            example: ["tag1", "tag2"]
+        feature:
+          type: boolean
+          example: false
+        featureOrdering:
+          type: integer
+          example: 1
+        bannerImage:
+          type: string
+          example: "banner_image"
+      xml:
+        name: post
+    PostList:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        title:
+          type: string
+          example: "Bài viết 1"
+        state:
+          type: string
+          example: ACTIVE
+          description: "Trạng thái bài viết: 'DRAFT','ACTIVE','DELETED'"
+        createdTime:
+          type: string
+          format: date-time
+          example: "30-05-1978 02:34:56"
+        publishTime:
+          type: string
+          format: date-time
+          example: "30-05-1978 02:34:56"
+        categoriesId:
+          type: array
+          items:
+            type: integer
+          example: [1, 2, 3]
+        postTag:
+          type: array
+          items:
+            type: string
+          example: ["tag1", "tag2"]
+    PostRequestBody:
+      type: object
+      properties:
+        title:
+          type: string
+          example: "Bài viết 1"
+        alias:
+          type: string
+          example: "bai-viet-1"
+        description:
+          type: string
+          example: "Mô tả bài viết"
+        content:
+          type: string
+          example: "Nội dung bài viết"
+        state:
+          type: string
+          example: ACTIVE
+        ordering:
+          type: integer
+          format: int32
+          example: 1
+        stick:
+          type: boolean
+          example: false
+        categoriesId:
+          type: array
+          items:
+            type: integer
+          example: [1, 2, 3]
+        thumbImage:
+          type: string
+          example: "https://cdn.tgdd.vn/Files/2017/02/16/950437/anhthunho1_800x450.jpg"
+        postTags:
+          type: array
+          items:
+            type: string
+          example: ["tag1", "tag2"]
+        feature:
+          type: boolean
+          example: false
+        featureOrdering:
+          type: integer
+          example: 1
+        bannerImage:
+          type: string
+          example: "banner_image"
+      required:
+        - title
+        - alias
+        - description
+        - content
+        - state
+    PostRequestUpdateBody:
+      allOf:
+        - $ref: "#/components/schemas/PostRequestBody" #
+        - type: object
+          properties: # extra properties only for cats
+            id:
+              type: integer
+              description: Mã bài viết
+      required:
+        - title
+        - alias
+        - description
+        - content
+        - state
+        - id
+    RequestDeleteBody:
+      type: object
+      properties:
+        id:
+          type: array
+          items:
+            type: integer
+          example: [1, 2, 3]
+
+    # Người dùng
+
+    # Thông tin tuyển dụng
+    Recruitment:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: mã thông tin tuyển dụng tự sinh trên hệ thống
+        code:
+          type: string
+          description: mã thông tin tuyển dụng do người quản trị nhập
+        jobTitle:
+          type: string
+          description: chức danh
+        description:
+          type: string
+          description: mô tả thông tin tuyển dụng
+        experienceRequirementDescriptions:
+          type: string
+          description: mô tả yêu cầu kinh nghiệm về công việc
+        industry:
+          type: string
+          description: ngành nghề
+        salaryType:
+          type: string
+          description: lương net hay gross
+        salaryCurrency:
+          type: string
+          description: tiền tệ
+        salaryMinValue:
+          type: string
+          description: lương tối thiểu
+        salaryMaxValue:
+          type: string
+          description: lương tối đa
+        employmentTypes:
+          type: string
+          description: Hình thức công việc
+        validThrough:
+          type: string
+          description: Thời gian hết hạn nộp hồ sơ
+          format: date-time
+          example: "30/05/1978 02:34:56"
+        jobBenefits:
+          type: string
+          description: Phúc lợi
+        gender:
+          type: string
+          description: giới tính
+        ageFrom:
+          type: string
+          description: Độ tuổi tối thiểu
+        ageTo:
+          type: string
+          description: Độ tuổi tối đa
+        experienceRequirementsType:
+          type: string
+          description: yêu cầu kinh nghiệm (có, không, lâu năm...)
+        monthsOfExperienceFrom:
+          type: integer
+          description: số tháng yêu cầu kinh nghiệm tối thiểu
+        monthsOfExperienceTo:
+          type: integer
+          description: số tháng yêu cầu kinh nghiệm tối đa
+        occupationalCategory:
+          type: string
+          description: cấp bậc
+        qualifications:
+          type: string
+          description: bằng cấp
+        createdBy:
+          type: string
+          description: người tạo thông tin tuyển dụng
+        modifiedBy:
+          type: string
+          description: người sửa thông tin tuyển dụng
+        createdTime:
+          type: string
+          format: date-time
+          example: "30/05/1978 02:34:56"
+          description: ngày tạo
+        modifiedTime:
+          type: string
+          format: date-time
+          example: "30/05/1978 02:34:56"
+          description: ngày chỉnh sửa
+        publishStatus:
+          type: string
+          description: trạng thái xuất bản ('PENDING','ACTIVE','INACTIVE', 'EXPIRED')
+        publishUpDate:
+          type: string
+          format: date-time
+          description: Ngày xuất bản thông tin tuyển dụng
+          example: "30/05/1978 02:34:56"
+        publishDownDate:
+          type: string
+          format: date-time
+          description: Ngày bỏ xuất bản thông tin tuyển dụng
+          example: "30/05/1978 02:34:56"
+        skills:
+          type: string
+          description: Danh sách chi tiết kĩ năng yêu cầu
+        jobAmount:
+          type: integer
+          format: int32
+          description: Số lượng cần tuyển
+        note:
+          type: string
+          description: Ghi chú thêm
+          example: Ghi chú  thêm
+        reasonJobPostings:
+          type: string
+          description: Lý do tuyển dụng
+        mdmJobLocationid:
+          type: integer
+          format: int32
+          description: Mã địa điểm làm việc
+    RecruitmentRequestBody:
+      type: object
+      properties:
+        code:
+          type: string
+          description: mã thông tin tuyển dụng do người quản trị nhập
+        jobTitle:
+          type: string
+          description: chức danh
+        description:
+          type: string
+          description: mô tả thông tin tuyển dụng
+        experienceRequirementDescriptions:
+          type: string
+          description: mô tả yêu cầu kinh nghiệm về công việc
+        industry:
+          type: string
+          description: ngành nghề
+        salaryType:
+          type: string
+          description: lương net hay gross
+        salaryCurrency:
+          type: string
+          description: tiền tệ
+        salaryMinValue:
+          type: string
+          description: lương tối thiểu
+        salaryMaxValue:
+          type: string
+          description: lương tối đa
+        employmentTypes:
+          type: string
+          description: Hình thức công việc
+        validThrough:
+          type: string
+          description: Thời gian hết hạn nộp hồ sơ
+          format: date-time
+          example: "30/05/1978 02:34:56"
+        jobBenefits:
+          type: string
+          description: Phúc lợi
+        gender:
+          type: string
+          description: giới tính
+        ageFrom:
+          type: string
+          description: Độ tuổi tối thiểu
+        ageTo:
+          type: string
+          description: Độ tuổi tối đa
+        experienceRequirementsType:
+          type: string
+          description: yêu cầu kinh nghiệm (có, không, lâu năm...)
+        monthsOfExperienceFrom:
+          type: integer
+          description: số tháng yêu cầu kinh nghiệm tối thiểu
+        monthsOfExperienceTo:
+          type: integer
+          description: số tháng yêu cầu kinh nghiệm tối đa
+        occupationalCategory:
+          type: string
+          description: cấp bậc
+        qualifications:
+          type: string
+          description: bằng cấp
+        publishStatus:
+          type: string
+          description: trạng thái xuất bản ('PENDING','ACTIVE','INACTIVE', 'EXPIRED')
+        skills:
+          type: string
+          description: Danh sách chi tiết kĩ năng yêu cầu
+        jobAmount:
+          type: integer
+          format: int32
+          description: Số lượng cần tuyển
+        note:
+          type: string
+          description: Ghi chú thêm
+          example: Ghi chú  thêm
+        reasonJobPostings:
+          type: string
+          description: Lý do tuyển dụng
+        mdmJobLocationid:
+          type: integer
+          format: int32
+          description: Mã địa điểm làm việc
+      required:
+        - code
+        - jobTitle
+        - description
+        - experienceRequirementDescriptions
+        - industry
+        - salaryCurrencyvalid_through
+        - employmentTypes
+        - validThrough
+        - jobBenefits
+        - gender
+        - experienceRequirementsType
+        - occupationalCategory
+        - qualifications
+        - jobAmount
+    RecruitmentRequestUpdateBody:
+      allOf:
+        - $ref: "#/components/schemas/RecruitmentRequestBody" #
+        - type: object
+          properties: # extra properties only for cats
+            id:
+              type: integer
+              description: Mã thông tin tuyển dụng
+      required:
+        - code
+        - jobTitle
+        - description
+        - experienceRequirementDescriptions
+        - industry
+        - salaryCurrencyvalid_through
+        - employmentTypes
+        - validThrough
+        - jobBenefits
+        - gender
+        - experienceRequirementsType
+        - occupationalCategory
+        - qualifications
+        - jobAmount
+        - id
+    JobLocation:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+          description: Mã địa điểm làm vieejc
+        province:
+          type: string
+          description: Tên tỉnh/ thành phố
+        district:
+          type: string
+          description: Tên quận/ phường xã
+        streetAddress:
+          type: string
+          description: Địa chỉ, tên đường
+        lngPoint:
+          type: integer
+          format: int64
+          description: Tọa độ kinh tuyến
+        latPoint:
+          type: integer
+          format: int64
+          description: Tọa độ vĩ tuyến
+    #
+    # Thông tin tuyển dụng
+    RecruitmentTemplate:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: mã thông tin tuyển dụng mẫu tự sinh trên hệ thống
+        code:
+          type: string
+          description: mã thông tin tuyển dụng do người quản trị nhập
+        jobTitle:
+          type: string
+          description: chức danh
+        description:
+          type: string
+          description: mô tả thông tin tuyển dụng
+        experienceRequirementDescriptions:
+          type: string
+          description: mô tả yêu cầu kinh nghiệm về công việc
+        industry:
+          type: string
+          description: ngành nghề
+        salaryType:
+          type: string
+          description: lương net hay gross
+        salaryCurrency:
+          type: string
+          description: tiền tệ
+        salaryMinValue:
+          type: string
+          description: lương tối thiểu
+        salaryMaxValue:
+          type: string
+          description: lương tối đa
+        employmentTypes:
+          type: string
+          description: Hình thức công việc
+        validThrough:
+          type: string
+          description: Thời gian hết hạn nộp hồ sơ
+          format: date-time
+          example: "30/05/1978 02:34:56"
+        jobBenefits:
+          type: string
+          description: Phúc lợi
+        gender:
+          type: string
+          description: giới tính
+        ageFrom:
+          type: string
+          description: Độ tuổi tối thiểu
+        ageTo:
+          type: string
+          description: Độ tuổi tối đa
+        experienceRequirementsType:
+          type: string
+          description: yêu cầu kinh nghiệm (có, không, lâu năm...)
+        monthsOfExperienceFrom:
+          type: integer
+          description: số tháng yêu cầu kinh nghiệm tối thiểu
+        monthsOfExperienceTo:
+          type: integer
+          description: số tháng yêu cầu kinh nghiệm tối đa
+        occupationalCategory:
+          type: string
+          description: cấp bậc
+        qualifications:
+          type: string
+          description: bằng cấp
+        createdBy:
+          type: string
+          description: người tạo thông tin tuyển dụng
+        modifiedBy:
+          type: string
+          description: người sửa thông tin tuyển dụng
+        createdTime:
+          type: string
+          format: date-time
+          example: "30/05/1978 02:34:56"
+          description: ngày tạo
+        modifiedTime:
+          type: string
+          format: date-time
+          example: "30/05/1978 02:34:56"
+          description: ngày chỉnh sửa
+        skills:
+          type: string
+          description: Danh sách chi tiết kĩ năng yêu cầu
+        jobAmount:
+          type: integer
+          format: int32
+          description: Số lượng cần tuyển
+        note:
+          type: string
+          description: Ghi chú thêm
+          example: Ghi chú  thêm
+        reasonJobPostings:
+          type: string
+          description: Lý do tuyển dụng
+        mdmJobLocationid:
+          type: integer
+          format: int32
+          description: Mã địa điểm làm việc
+    RecruitmentTemplateRequestBody:
+      type: object
+      properties:
+        code:
+          type: string
+          description: mã thông tin tuyển dụng do người quản trị nhập
+        jobTitle:
+          type: string
+          description: chức danh
+        description:
+          type: string
+          description: mô tả thông tin tuyển dụng
+        experienceRequirementDescriptions:
+          type: string
+          description: mô tả yêu cầu kinh nghiệm về công việc
+        industry:
+          type: string
+          description: ngành nghề
+        salaryType:
+          type: string
+          description: lương net hay gross
+        salaryCurrency:
+          type: string
+          description: tiền tệ
+        salaryMinValue:
+          type: string
+          description: lương tối thiểu
+        salaryMaxValue:
+          type: string
+          description: lương tối đa
+        employmentTypes:
+          type: string
+          description: Hình thức công việc
+        validThrough:
+          type: string
+          description: Thời gian hết hạn nộp hồ sơ
+          format: date-time
+          example: "30/05/1978 02:34:56"
+        jobBenefits:
+          type: string
+          description: Phúc lợi
+        gender:
+          type: string
+          description: giới tính
+        ageFrom:
+          type: string
+          description: Độ tuổi tối thiểu
+        ageTo:
+          type: string
+          description: Độ tuổi tối đa
+        experienceRequirementsType:
+          type: string
+          description: yêu cầu kinh nghiệm (có, không, lâu năm...)
+        monthsOfExperienceFrom:
+          type: integer
+          description: số tháng yêu cầu kinh nghiệm tối thiểu
+        monthsOfExperienceTo:
+          type: integer
+          description: số tháng yêu cầu kinh nghiệm tối đa
+        occupationalCategory:
+          type: string
+          description: cấp bậc
+        qualifications:
+          type: string
+          description: bằng cấp
+        skills:
+          type: string
+          description: Danh sách chi tiết kĩ năng yêu cầu
+        jobAmount:
+          type: integer
+          format: int32
+          description: Số lượng cần tuyển
+        note:
+          type: string
+          description: Ghi chú thêm
+          example: Ghi chú  thêm
+        reasonJobPostings:
+          type: string
+          description: Lý do tuyển dụng
+        mdmJobLocationid:
+          type: integer
+          format: int32
+          description: Mã địa điểm làm việc
+      required:
+        - code
+        - jobTitle
+        - description
+        - experienceRequirementDescriptions
+        - industry
+        - salaryCurrencyvalid_through
+        - employmentTypes
+        - validThrough
+        - jobBenefits
+        - gender
+        - experienceRequirementsType
+        - occupationalCategory
+        - qualifications
+        - jobAmount
+    RecruitmentTemplateRequestUpdateBody:
+      allOf:
+        - $ref: "#/components/schemas/RecruitmentTemplate" #
+        - type: object
+          properties: # extra properties only for cats
+            id:
+              type: integer
+              description: Mã mẫu thông tin tuyển dụng
+      required:
+        - code
+        - jobTitle
+        - description
+        - experienceRequirementDescriptions
+        - industry
+        - salaryCurrencyvalid_through
+        - employmentTypes
+        - validThrough
+        - jobBenefits
+        - gender
+        - experienceRequirementsType
+        - occupationalCategory
+        - qualifications
+        - jobAmount
+        - id
+    # Hồ sơ ứng tuyển
+    Applicant:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+          description: Mã hồ sơ ứng tuyển
+        note:
+          type: string
+          description: Ghi chú
+        email:
+          type: string
+          description: Email của người ứng tuyển
+        description:
+          type: string
+          description: Chú thích
+        address:
+          type: string
+          description: Địa chỉ nơi ở người ứng tuyển
+        phone:
+          type: string
+          description: Số điện thoại của người ứng tuyển
+        job:
+          type: string
+          description: Vị trí ứng tuyển
+        jobProvince:
+          type: string
+          description: Tỉnh thành nơi ứng tuyển
+        jobTarget:
+          type: string
+          description: Mục tiêu nghề nghiệp
+        utmSource:
+          type: string
+          description: Nguồn hồ sơ ứng tuyển
+        utmMedium:
+          type: string
+          description: Phương thức truy cập SMS, email,...
+        utmCampaign:
+          type: string
+          description: Tên chiến dịch
+        utmContent:
+          type: string
+          description: loại nội dung quảng cáo- logo, banner
+        utmTerm:
+          type: string
+          description: từ khóa quảng cáo
+        lastName:
+          type: string
+          description: Tên của người ứng tuyển
+        firstName:
+          type: string
+          description: Họ và đệm của người ứng tuyển
+        province:
+          type: string
+          description: Tên tỉnh/ thành phố nơi ở của người ứng tuyển
+        avatarUrl:
+          type: string
+          description: Ảnh của ứng viên
+        usersId:
+          type: string
+          description: mã định danh của người ứng tuyển trên hệ thống
+        gender:
+          type: string
+          description: giới tính
+        maritalStatus:
+          type: string
+          description: Tình trạng hôn nhân
+        dob:
+          type: string
+          description: Ngày sinh
+          format: date
+          example: "30/05/1978"
+        qualifications:
+          type: string
+          description: Bằng cấp người ứng tuyển
+        jobWorked:
+          type: string
+          description: Công việc đã từng làm
+        yearExperience:
+          type: string
+          description: Số năm kinh nghiệm
+        occupationalCategory:
+          type: string
+          description: Cấp bậc vị trí ứng tuyển
+        recruitmentId:
+          type: integer
+          format: int32
+          description: Mã thông tin đăng tuyển
+        createdTime:
+          type: string
+          description: Thời gian tạo
+          format: date-time
+          example: "30/05/1978 02:34:56"
+        modifiedTime:
+          type: string
+          description: Thời gian chỉnh sửa
+          format: date-time
+          example: "30/05/1978 02:34:56"
+        createdBy:
+          type: string
+          description: Người tạo
+        modifiedBy:
+          type: string
+          description: Người chỉnh sửa
+
+    ApplicantRequestBody:
+      type: object
+      properties:
+        note:
+          type: string
+          description: Ghi chú
+        email:
+          type: string
+          description: Email của người ứng tuyển
+        description:
+          type: string
+          description: Chú thích
+        address:
+          type: string
+          description: Địa chỉ nơi ở người ứng tuyển
+        phone:
+          type: string
+          description: Số điện thoại của người ứng tuyển
+        job:
+          type: string
+          description: Vị trí ứng tuyển
+        jobProvince:
+          type: string
+          description: Tỉnh thành nơi ứng tuyển
+        jobTarget:
+          type: string
+          description: Mục tiêu nghề nghiệp
+        utmSource:
+          type: string
+          description: Nguồn hồ sơ ứng tuyển
+        utmMedium:
+          type: string
+          description: Phương thức truy cập SMS, email,...
+        utmCampaign:
+          type: string
+          description: Tên chiến dịch
+        utmContent:
+          type: string
+          description: loại nội dung quảng cáo- logo, banner
+        utmTerm:
+          type: string
+          description: từ khóa quảng cáo
+        lastName:
+          type: string
+          description: Tên của người ứng tuyển
+        firstName:
+          type: string
+          description: Họ và đệm của người ứng tuyển
+        province:
+          type: string
+          description: Tên tỉnh/ thành phố nơi ở của người ứng tuyển
+        avatarUrl:
+          type: string
+          description: Ảnh của ứng viên
+        usersId:
+          type: string
+          description: mã định danh của người ứng tuyển trên hệ thống
+        gender:
+          type: string
+          description: giới tính
+        maritalStatus:
+          type: string
+          description: Tình trạng hôn nhân
+        dob:
+          type: string
+          description: Ngày sinh
+          format: date
+          example: "30/05/1978"
+        qualifications:
+          type: string
+          description: Bằng cấp người ứng tuyển
+        jobWorked:
+          type: string
+          description: Công việc đã từng làm
+        yearExperience:
+          type: integer
+          format: int32
+          description: Số năm kinh nghiệm
+        occupationalCategory:
+          type: string
+          description: Cấp bậc vị trí ứng tuyển
+        recruitmentId:
+          type: integer
+          format: int32
+          description: Mã thông tin đăng tuyển
+      required:
+        - email
+        - recruitmentId
+        - address
+        - phone
+        - job
+        - jobProvince
+        - jobTarget
+        - lastName
+        - firstName
+        - province
+        - avatarUrl
+        - jobWorked
+        - qualifications
+        - jobAmount
+        - yearExperience
+        - occupationalCategory
+    ApplicantRequestUpdateBody:
+      allOf:
+        - $ref: "#/components/schemas/ApplicantRequestBody" #
+        - type: object
+          properties: # extra properties only for cats
+            id:
+              type: integer
+              description: Mã thông tin hồ sơ ứng tuyển
+      required:
+        - email
+        - recruitmentId
+        - address
+        - phone
+        - job
+        - jobProvince
+        - jobTarget
+        - lastName
+        - firstName
+        - province
+        - avatarUrl
+        - jobWorked
+        - qualifications
+        - jobAmount
+        - yearExperience
+        - occupationalCategory
+        - id
+    #Survey
+    Survey:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+          description: Mã khảo sát
+        title:
+          type: string
+          description: Tiêu đề khảo sát
+        state:
+          type: integer
+          format: int32
+          description: Trạng thái khảo sát
+        createdTime:
+          type: string
+          format: date-time
+          example: "30/05/1978 02:34:56"
+          description: Ngày tạo
+        modifiedTime:
+          type: string
+          format: date-time
+          example: "30/05/1978 02:34:56"
+          description: Ngày chỉnh sửa
+        createdBy:
+          type: string
+          description: người tạo
+        modifiedBy:
+          type: string
+          description: người chỉnh sửa
+        description:
+          type: string
+          description: mô tả
+
+    SurveyQuestion:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+          description: mã câu trả lời
+        type:
+          type: string
+          description: Loại câu hỏi khảo sát (chọn 1, chọn nhiều, tự điền câu trả lời)
+        question:
+          type: string
+          description: Câu hỏi
+        surveysId:
+          type: integer
+          format: int32
+          description: Mã khảo sát
+        createdTime:
+          type: string
+          format: date-time
+          example: "30/05/1978 02:34:56"
+          description: Ngày tạo
+        createdBy:
+          type: string
+          description: người tạo
+
+    SurveyAnswer:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+          description: mã câu trả lời
+        content:
+          type: string
+          description: nội dung trả lời
+        image:
+          type: string
+          description: Hình ảnh câu trả lời
+        createdTime:
+          type: string
+          format: date-time
+          example: "30/05/1978 02:34:56"
+          description: Ngày tạo
+        createdBy:
+          type: string
+          description: người tạo
+        surveyQuestionsId:
+          type: integer
+          format: int32
+          description: Mã câu hỏi khảo sát
+
+    SurveyResult:
+      description: Kết quả khảo sát
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+          description: mã kết quả
+        createdTime:
+          type: string
+          format: date-time
+          example: "30/05/1978 02:34:56"
+          description: Ngày tạo
+        clientId:
+          type: string
+          description: Mã định danh client
+        surveyAnswerId:
+          type: integer
+          description: Mã câu trả lời khảo sát
+        createdBy:
+          type: string
+          description: người tạo
+
+    SurveyRequestBody:
+      type: object
+      properties:
+        title:
+          type: string
+          description: Tiêu đề khảo sát
+        state:
+          type: string
+          description: Trạng thái khảo sát          
+        description:
+          type: string
+          description: mô tả
+      required:
+        - title
+        - state
+        - description
+
+    SurveyRequestUpdateBody:
+      allOf:
+        - $ref: "#/components/schemas/SurveyRequestBody" #
+        - type: object
+          properties: # extra properties only for cats
+            id:
+              type: integer
+              description: Mã khảo sát
+      required:
+        - title
+        - state
+        - description
+        - id
+
+    GetDetailSurveyResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          default: true
+        data:
+          $ref: "#/components/schemas/Survey"
+
+    GetListSurveyResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          default: true
+        data:
+          type: object
+          properties:
+            total:
+              type: integer
+              format: int32
+              description: Tổng số bản ghi
+            items:
+              type: array
+              items:
+                $ref: "#/components/schemas/Survey"
+
+    CreateSurveyQuestionRequest:
+      type: object
+      properties:
+        type:
+          type: string
+          description: Loại câu hỏi khảo sát (chọn 1, chọn nhiều, tự điền câu trả lời)
+        question:
+          type: string
+          description: Câu hỏi
+        surveysId:
+          type: integer
+          format: int32
+          description: Mã khảo sát
+    UpdateSurveyQuestionRequest:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+          description: mã câu hỏi khảo sát
+        type:
+          type: string
+          description: Loại câu hỏi khảo sát (chọn 1, chọn nhiều, tự điền câu trả lời)
+        question:
+          type: string
+          description: Câu hỏi
+    GetDetailSurveyQuestionResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          default: true
+        data:
+          $ref: "#/components/schemas/SurveyQuestion"
+
+    CreateSurveyAnswerRequest:
+      type: object
+      properties:
+        type:
+          type: string
+          description: Loại câu hỏi khảo sát (chọn 1, chọn nhiều, tự điền câu trả lời)
+        question:
+          type: string
+          description: Câu hỏi
+        surveysId:
+          type: integer
+          format: int32
+          description: Mã khảo sát
+    UpdateSurveyAnswerRequest:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+          description: mã câu hỏi khảo sát
+        type:
+          type: string
+          description: Loại câu hỏi khảo sát (chọn 1, chọn nhiều, tự điền câu trả lời)
+        question:
+          type: string
+          description: Câu hỏi
+    GetDetailSurveyAnswerResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          default: true
+        data:
+          $ref: "#/components/schemas/SurveyAnswer"
+    GetDetailSurveyResultResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          default: true
+        data:
+          $ref: "#/components/schemas/SurveyResult"
+    UploadFileResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          default: true
+        data:
+          type: object
+          properties:
+            fileName:
+              type: string
+              description: tên file upload
+            url:
+              type: string
+              description: url file
+
+    #Response
+    ApiBaseRequestBody:
+      type: object
+      properties:
+        start:
+          type: integer
+          format: int32
+          description: Lấy bản ghi từ trang
+          example: 0
+        limit:
+          type: integer
+          format: int32
+          description: Số lượng bản ghi tối đa
+        keyword:
+          type: string
+          description: Từ khóa tìm kiếm
+        sortField:
+          type: string
+          description: Tên field để sắp xếp bản ghi khi lấy dữ liệu
+        sortType:
+          type: string
+          description: Loại sắp xếp ( ASC hoặc DESC)
+        count:
+          type: boolean
+          description: Có lấy tổng số bản ghi hay không
+    ApiGetPostRequest:
+      type: object
+      properties:
+        start:
+          type: integer
+          format: int32
+          description: Lấy bản ghi từ trang
+          example: 0
+        limit:
+          type: integer
+          format: int32
+          description: Số lượng bản ghi tối đa
+        keyword:
+          type: string
+          description: Từ khóa tìm kiếm
+        sortField:
+          type: string
+          description: Tên field để sắp xếp bản ghi khi lấy dữ liệu
+        sortType:
+          type: string
+          description: Loại sắp xếp ( ASC hoặc DESC)
+        categoryId:
+          type: integer
+          description: Lọc theo một mảng các chuyên mục
+          example: [1, 2, 3]
+        state:
+          type: string
+          description: Lọc theo trang thái DRAFT, DELETED, ACTIVE
+          example: DRAFT
+        postTags:
+          type: string
+          description: Lọc theo một mảng các mục
+          example: ["tag1", "tag2"]
+        startDate:
+          type: string
+          description: Ngày bắt đầu
+          example: "2023-02-17"
+        endDate:
+          type: string
+          description: Ngày kết thúc
+          example: "2023-02-27"
+    ApiGetSurveyRequest:
+      type: object
+      properties:
+        start:
+          type: integer
+          format: int32
+          description: Lấy bản ghi từ trang
+          example: 0
+        limit:
+          type: integer
+          format: int32
+          description: Số lượng bản ghi tối đa
+        keyword:
+          type: string
+          description: Từ khóa tìm kiếm
+        sortField:
+          type: string
+          description: Tên field để sắp xếp bản ghi khi lấy dữ liệu
+        sortType:
+          type: string
+          description: Loại sắp xếp ( ASC hoặc DESC)
+        state:
+          type: string
+          description: Lọc theo trang thái ACTIVE, INACTIVE
+          example: ACTIVE
+        startDate:
+          type: string
+          description: Ngày bắt đầu
+          example: "2023-02-17"
+        endDate:
+          type: string
+          description: Ngày kết thúc
+          example: "2023-02-27"
+    ApiGetSurveyQuestionRequest:
+      type: object
+      properties:
+        surveysId:
+          type: integer
+          example: 1
+        question:
+          type: string
+          example: "Bạn bao nhiêu tuổi?"
+    ApiGetSurveyAnswerRequest:
+      type: object
+      properties:
+        surveyQuestionId:
+          type: integer
+          example: 1
+    ApiGetSurveyResultRequest:
+      type: object
+      properties:
+        surveyAnswerId:
+          type: integer
+          example: 1
+    ApiResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        error:
+          type: object
+          properties:
+            message:
+              type: string
+            errors:
+              type: array
+              items:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  message:
+                    type: string
+                  code:
+                    type: integer
+                    enum:
+                      [
+                        0,
+                        1,
+                        2,
+                        3,
+                        4,
+                        5,
+                        6,
+                        7,
+                        8,
+                        9,
+                        10,
+                        400,
+                        401,
+                        403,
+                        404,
+                        405,
+                        406,
+                        500,
+                        502,
+                        503,
+                        504,
+                        410,
+                        422,
+                      ]
+                    x-enumNames:
+                      [
+                        ERR_OK,
+                        ERR_SYSTEM,
+                        ERR_VALIDATION,
+                        ERR_OBJECT_NOT_FOUND,
+                        ERR_ACCOUNT_LOCKED,
+                        ERR_UNAUTHORIZED,
+                        ERR_TOKEN_INVALID,
+                        ERR_INTERNAL_SERVICE,
+                        ERR_OTHER,
+                        ERR_PARTNERID_INVALID,
+                        ERR_PARTNER_APIKEY_INVALID,
+                        ERR_BAD_REQUEST,
+                        ERR_PERMISSION_INVALID,
+                        ERR_ACCESS_FORBIDDEN,
+                        ERR_REQUEST_NOT_FOUND,
+                        ERR_METHOD_NOT_ALLOWED,
+                        ERR_METHOD_FORMAT_NOT_VALID,
+                        ERR_SERVER_ERROR,
+                        ERR_GATEWAY_ERROR,
+                        ERR_SERVER_UNAVAILABLE,
+                        ERR_GATEWAY_TIMEOUT,
+                        ERR_RESOUCES_DELETED,
+                        ERR_VALIDATE_ERROR_OCCURED,
+                      ]
+    ApiResponseSuccess:
+      type: object
+      properties:
+        success:
+          type: boolean
+          default: true
+        error:
+          type: object
+          default: null
+    ApiResponseFailed:
+      type: object
+      properties:
+        success:
+          type: boolean
+          default: false
+        error:
+          type: object
+          properties:
+            message:
+              type: string
+              example: "Error message"
+            errors:
+              type: array
+              items:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    example: "Error of field id"
+                  message:
+                    type: string
+                    example: "Error detail message"
+                  code:
+                    type: integer
+                    enum:
+                      [
+                        0,
+                        1,
+                        2,
+                        3,
+                        4,
+                        5,
+                        6,
+                        7,
+                        8,
+                        9,
+                        10,
+                        400,
+                        401,
+                        403,
+                        404,
+                        405,
+                        406,
+                        500,
+                        502,
+                        503,
+                        504,
+                        410,
+                        422,
+                      ]
+                    x-enumNames:
+                      [
+                        ERR_OK,
+                        ERR_SYSTEM,
+                        ERR_VALIDATION,
+                        ERR_OBJECT_NOT_FOUND,
+                        ERR_ACCOUNT_LOCKED,
+                        ERR_UNAUTHORIZED,
+                        ERR_TOKEN_INVALID,
+                        ERR_INTERNAL_SERVICE,
+                        ERR_OTHER,
+                        ERR_PARTNERID_INVALID,
+                        ERR_PARTNER_APIKEY_INVALID,
+                        ERR_BAD_REQUEST,
+                        ERR_PERMISSION_INVALID,
+                        ERR_ACCESS_FORBIDDEN,
+                        ERR_REQUEST_NOT_FOUND,
+                        ERR_METHOD_NOT_ALLOWED,
+                        ERR_METHOD_FORMAT_NOT_VALID,
+                        ERR_SERVER_ERROR,
+                        ERR_GATEWAY_ERROR,
+                        ERR_SERVER_UNAVAILABLE,
+                        ERR_GATEWAY_TIMEOUT,
+                        ERR_RESOUCES_DELETED,
+                        ERR_VALIDATE_ERROR_OCCURED,
+                      ]
+    GetDetailCategoryResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          default: true
+        data:
+          $ref: "#/components/schemas/Category"
+
+    GetListCategoryResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          default: true
+        data:
+          type: object
+          properties:
+            total:
+              type: integer
+              format: int32
+              description: Tổng số bản ghi
+            items:
+              type: array
+              items:
+                $ref: "#/components/schemas/Category"
+    GetDetailPostResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          default: true
+        data:
+          $ref: "#/components/schemas/Post"
+
+    GetListPostResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          default: true
+        data:
+          type: object
+          properties:
+            total:
+              type: integer
+              format: int32
+              description: Tổng số bản ghi
+            items:
+              type: array
+              items:
+                $ref: "#/components/schemas/PostList"
+    GetDetailRecruitmentResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          default: true
+        data:
+          $ref: "#/components/schemas/Recruitment"
+
+    GetListRecruitmentResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          default: true
+        data:
+          type: object
+          properties:
+            total:
+              type: integer
+              format: int32
+              description: Tổng số bản ghi
+            items:
+              type: array
+              items:
+                $ref: "#/components/schemas/Recruitment"
+    GetDetailRecruitmentTemplateResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          default: true
+        data:
+          $ref: "#/components/schemas/Recruitment"
+
+    GetListRecruitmentTemplateResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          default: true
+        data:
+          type: object
+          properties:
+            total:
+              type: integer
+              format: int32
+              description: Tổng số bản ghi
+            items:
+              type: array
+              items:
+                $ref: "#/components/schemas/Recruitment"
+
+    GetDetailApplicantResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          default: true
+        data:
+          $ref: "#/components/schemas/Applicant"
+
+    GetListApplicantResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          default: true
+        data:
+          type: object
+          properties:
+            total:
+              type: integer
+              format: int32
+              description: Tổng số bản ghi
+            items:
+              type: array
+              items:
+                $ref: "#/components/schemas/Applicant"
+      xml:
+        name: "##default"
+    # master data
+    GetListMasterDataRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Tên masterdata
+        parentId:
+          type: string
+          description: Mã master data cha
+        start:
+          type: integer
+          format: int32
+          description: Start record
+        limit:
+          type: integer
+          format: int32
+          description: Limit record
+      required:
+        - name
+
+    CreateSocialInfoRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Tên mạng xã hội
+        url:
+          type: string
+          description: Đường dẫn
+        description:
+          type: string
+          description: Mô tả
+        imageUrl:
+          type: string
+          description: Ảnh đại diện của mạng xã hội
+      required:
+        - name
+        - url
+        - imageUrl
+        - id
+
+    UpdateSocialInfoRequest:
+      allOf:
+        - $ref: "#/components/schemas/CreateSocialInfoRequest" #
+        - type: object
+          properties:
+            id:
+              type: integer
+              description: Mã mdm social info
+      required:
+        - name
+        - url
+        - imageUrl
+        - id
+    DeleteSocialInfoRequest:
+      type: object
+      properties:
+        ids:
+          type: array
+          items:
+            type: string
+      required:
+        - name
+        - url
+        - imageUrl
+        - id
+
+    SocialInfo:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Tên mạng xã hội
+        url:
+          type: string
+          description: Đường dẫn
+        description:
+          type: string
+          description: Mô tả
+        imageUrl:
+          type: string
+          description: Ảnh đại diện của mạng xã hội
+        createdBy:
+          type: string
+          description: người tạo thông tin tuyển dụng
+        modifiedBy:
+          type: string
+          description: người sửa thông tin tuyển dụng
+        createdTime:
+          type: string
+          format: date-time
+          example: "30/05/1978 02:34:56"
+          description: ngày tạo
+        modifiedTime:
+          type: string
+          format: date-time
+          example: "30/05/1978 02:34:56"
+          description: ngày chỉnh sửa
+
+    GetDetailSocialInfoResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          default: true
+        data:
+          $ref: "#/components/schemas/SocialInfo"
+
+    GetListSocialInfoResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          default: true
+        data:
+          type: object
+          properties:
+            total:
+              type: integer
+              format: int32
+              description: Tổng số bản ghi
+            items:
+              type: array
+              items:
+                $ref: "#/components/schemas/SocialInfo"
+
+    MasterDataDef:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Tên mdm
+        description:
+          type: string
+          description: Mô tả
+        fileNameDefine:
+          type: string
+          description: Danh sách tên field
+
+    GetListMasterDataDefResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          default: true
+        data:
+          type: object
+          properties:
+            total:
+              type: integer
+              format: int32
+              description: Tổng số bản ghi
+            items:
+              type: array
+              items:
+                $ref: "#/components/schemas/MasterDataDef"
+
+    BaseMasterData:
+      type: object
+      properties:
+        id:
+          type: string
+          description: id mdm
+        name:
+          type: string
+          description: Tên mdm
+        parentId:
+          type: string
+          description: mã id parent
+        parentType:
+          type: string
+          description: tên mdm parent
+
+    GetListBaseMasterDataResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          default: true
+        data:
+          type: object
+          properties:
+            total:
+              type: integer
+              format: int32
+              description: Tổng số bản ghi
+            items:
+              type: array
+              items:
+                $ref: "#/components/schemas/BaseMasterData"
+
+    FileUpload:
+      type: object
+      properties:
+        id:
+          type: string
+          description: id file
+        fileName:
+          type: string
+          description: Tên file
+        url:
+          type: string
+          description: url của file
+        mime:
+          type: string
+          description: Loại file
+        fileSize:
+          type: integer
+          format: int32
+          description: size file
+        icon:
+          type: string
+          description: url ảnh thumb
+        iconId:
+          type: integer
+          format: int32
+          description: id của ảnh thumb icon
+
+    GetListImageGalleryDataResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          default: true
+        data:
+          type: object
+          properties:
+            total:
+              type: integer
+              format: int32
+              description: Tổng số bản ghi
+            items:
+              type: array
+              items:
+                $ref: "#/components/schemas/FileUpload"          
+
+  securitySchemes:
+    bearerAuth: # arbitrary name for the security scheme
+      type: http
+      scheme: bearer
+      bearerFormat: JWT # optional, arbitrary value for documentation purposes
+
